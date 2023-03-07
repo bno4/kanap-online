@@ -18,5 +18,5 @@ for (let i = 0; i < products.length; i++) {
 
 
 // récupération de l'élément du DOM qui accueillera les fiches produits
-const sectionItems = document.querySelector(".items")
+const sectionItems = document.querySelector("#items")
 sectionItems.appendChild(imageProduit);
