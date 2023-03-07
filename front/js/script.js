@@ -1,6 +1,8 @@
 // Récupération des pièces depuis le fichier JSON
-const reponse = await fetch('http://localhost:3000/api/products');
-const products = await reponse.json();
+fetch("http://localhost:3000/api/products")
+    .then(response => response.json());
+
+
 
 
 for (let i = 0; i < products.length; i++) {
