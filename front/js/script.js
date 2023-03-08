@@ -3,7 +3,7 @@ console.log(sectionProducts)
 
 const URL = "http://localhost:3000/api/products"
 
-//********************* Récupération des pièces depuis l'API (source : https://developer.mozilla.org/en-US/docs/Web/API/Response/json) ************************/
+//********************* création de la fonction qui affiche les pièces depuis l'API (source : https://developer.mozilla.org/en-US/docs/Web/API/Response/json) ************************/
 
 async function fetchData() {
     fetch(URL)
@@ -22,6 +22,7 @@ async function fetchData() {
                 nameProduct.innerText = product.name;
                 const descriptionProduct = document.createElement("p");
                 descriptionProduct.innerText = product.description;
+                // architecture des éléments a > article > img > h3 > p
                 sectionProducts.appendChild(linkProduct);
                 linkProduct.appendChild(articleProduct);
                 articleProduct.appendChild(imageProduct);
@@ -31,6 +32,7 @@ async function fetchData() {
             }
         }
         )
+        .catch(error)
 }
 
 // appel de la fonction qui affichera les éléments
