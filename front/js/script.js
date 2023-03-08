@@ -22,17 +22,22 @@ async function fetchData() {
                 nameProduct.innerText = product.name;
                 const descriptionProduct = document.createElement("p");
                 descriptionProduct.innerText = product.description;
+                const priceProduct = document.createElement("p");
+                priceProduct.innerText = `${product.price} €`;
                 // architecture des éléments a > article > img > h3 > p
                 sectionProducts.appendChild(linkProduct);
                 linkProduct.appendChild(articleProduct);
                 articleProduct.appendChild(imageProduct);
                 articleProduct.appendChild(nameProduct);
                 articleProduct.appendChild(descriptionProduct);
+                articleProduct.appendChild(priceProduct);
 
             }
         }
         )
-        .catch(error)
+        .catch((error) => {
+            console.error("Error:", error);
+        });
 }
 
 // appel de la fonction qui affichera les éléments
