@@ -13,11 +13,12 @@ async function fetchData() {
             // création des éléments enfants de la sectionProducts ("#items")
             for (const product of data) {
                 const linkProduct = document.createElement("a")
-                linkProduct.href = "./product.html?_id";
+                linkProduct.href = `./product.html?id=${product._id}`;
                 const articleProduct = document.createElement("article");
                 articleProduct.innerText;
                 const imageProduct = document.createElement("img");
                 imageProduct.src = product.imageUrl;
+                imageProduct.alt = product.altTxt;
                 const nameProduct = document.createElement("h3");
                 nameProduct.innerText = product.name;
                 const descriptionProduct = document.createElement("p");
