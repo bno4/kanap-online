@@ -3,7 +3,7 @@ console.log(sectionProducts)
 
 const URL = "http://localhost:3000/api/products"
 
-//********************* création de la fonction qui affiche les pièces depuis l'API (source : https://developer.mozilla.org/en-US/docs/Web/API/Response/json) ************************/
+//---- création de la fonction qui affiche les pièces depuis l'API (source : https://developer.mozilla.org/en-US/docs/Web/API/Response/json) ----//
 
 async function fetchData() {
     fetch(URL)
