@@ -22,10 +22,12 @@ function fetchObjectProduct() {
             // affichage nom du canapée
             const titleObject = document.getElementById("title");
             titleObject.innerText = object.name;
+            // affichage du prix (ajout d'un espace entre le nbre et l'€)
             const priceObject = document.getElementById("price");
             priceObject.innerText = `${object.price} `;
-            const DescriptionObject = document.getElementById("description");
-            DescriptionObject.innerText = object.description;
+            //affichage de la description
+            const descriptionObject = document.getElementById("description");
+            descriptionObject.innerText = object.description;
         }
         )
 }
