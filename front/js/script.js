@@ -5,14 +5,14 @@ const URL = "http://localhost:3000/api/products"
 
 //---- création de la fonction qui affiche les pièces depuis l'API (source : https://developer.mozilla.org/en-US/docs/Web/API/Response/json) ----//
 
-async function fetchData() {
+function fetchData() {
     fetch(URL)
         .then((response) => response.json())
         .then((data) => {
             console.log(data)
             // création des éléments enfants de la sectionProducts ("#items")
             for (const product of data) {
-                const linkProduct = document.createElement("a")
+                const linkProduct = document.createElement("a");
                 linkProduct.href = `./product.html?id=${product._id}`;
                 const articleProduct = document.createElement("article");
                 articleProduct.innerText;
@@ -42,5 +42,5 @@ async function fetchData() {
 }
 
 // appel de la fonction qui affichera les éléments
-fetchData()
+fetchData();
 

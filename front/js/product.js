@@ -9,7 +9,7 @@ const idProduct = searchParams.get("id")
 const urlProduct = `http://localhost:3000/api/products/${idProduct}`
 console.log(urlProduct);
 
-function fetchObjectProduct() {
+function fetchProduct() {
     fetch(urlProduct)
         .then((response) => response.json())
         .then((object) => {
@@ -28,9 +28,13 @@ function fetchObjectProduct() {
             //affichage de la description
             const descriptionObject = document.getElementById("description");
             descriptionObject.innerText = object.description;
+            // choix des couleurs
+            const colorsObject = document.getElementById("colors");
+            // colorsObject.innerHTML = object.colors fonction map array
+            console.log(colorsObject);
         }
         )
 }
 
 // appel de la fonction qui affichera les éléments de l'objet "canapé"
-fetchObjectProduct()
+fetchProduct();
