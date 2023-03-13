@@ -32,7 +32,7 @@ function fetchProduct() {
             // choix des couleurs
             const colorsObject = document.getElementById("colors");
             // intégration des couleur dans le dropdown menu
-            object.colors.map(function (color) {
+            object.colors.map(color => {
                 const colorOption = document.createElement("option");
                 colorsObject.appendChild(colorOption);
                 // colorOption.value = color;
