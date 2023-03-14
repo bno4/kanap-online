@@ -47,19 +47,7 @@ function fetchProduct() {
 // Appel de la fonction qui affichera les éléments de l'objet "canapé"
 fetchProduct();
 
-// Récupération des values "colors" et "quantity"
-// function that gets quantity value of the form in the markup
-// function quantityValue() {
-//     let quantity = document.getElementById("quantity");
-//     return quantity.value;
-// }
-// console.log(quantity.value);
 
-// function colorValue() {
-//     const color = document.getElementById("colors");
-//     return color.value;
-// }
-// console.log(color.value);
 
 // const addToCart = document.getElementById("addToCart");
 // addToCart.addEventListener("click", () => {
