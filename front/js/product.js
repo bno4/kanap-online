@@ -9,12 +9,11 @@ const idProduct = searchParams.get("id")
 const urlProduct = `http://localhost:3000/api/products/${idProduct}`
 console.log(urlProduct);
 
-// Appel des éléments du produit
+// Fonction d'appel des éléments du produit sélectionné depuis l'index.html
 function fetchProduct() {
     fetch(urlProduct)
         .then((response) => response.json())
         .then((object) => {
-            console.log(object)
             // affichage de la photo canapé
             const imageObject = document.createElement("img");
             imageObject.src = object.imageUrl;
@@ -34,13 +33,44 @@ function fetchProduct() {
             // intégration des couleur dans le dropdown menu
             object.colors.map(color => {
                 const colorOption = document.createElement("option");
-                colorsObject.appendChild(colorOption);
-                // colorOption.value = color;
+                colorOption.value = color;
                 colorOption.innerText = color;
+                colorsObject.appendChild(colorOption);
+
             });
+            const quantityObject = document.getElementById("quantity");
+
         }
         )
 }
 
-// appel de la fonction qui affichera les éléments de l'objet "canapé"
+// Appel de la fonction qui affichera les éléments de l'objet "canapé"
 fetchProduct();
+
+// Récupération des values "colors" et "quantity"
+// function that gets quantity value of the form in the markup
+// function quantityValue() {
+//     let quantity = document.getElementById("quantity");
+//     return quantity.value;
+// }
+// console.log(quantity.value);
+
+// function colorValue() {
+//     const color = document.getElementById("colors");
+//     return color.value;
+// }
+// console.log(color.value);
+
+// const addToCart = document.getElementById("addToCart");
+// addToCart.addEventListener("click", () => {
+//     const addObject = {
+//         quantity: document.getElementById("quantity").value,
+//         color: document.getElementById("colors").value,
+//         id: id
+//     }
+// });
+
+
+// const quantityObject = document.getElementById("quantity")
+// quantityObject.addEventListener ("click", function () {
+
