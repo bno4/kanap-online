@@ -30,7 +30,7 @@ function fetchProduct() {
             descriptionObject.innerText = object.description;
             // choix des couleurs
             const colorsObject = document.getElementById("colors");
-            // intégration des couleur dans le dropdown menu
+            // intégration des couleurs dans le dropdown menu
             object.colors.map(color => {
                 const colorOption = document.createElement("option");
                 colorOption.value = color;
@@ -49,14 +49,14 @@ fetchProduct();
 
 
 
-// const addToCart = document.getElementById("addToCart");
-// addToCart.addEventListener("click", () => {
-//     const addObject = {
-//         quantity: document.getElementById("quantity").value,
-//         color: document.getElementById("colors").value,
-//         id: id
-//     }
-// });
+const addToCart = document.getElementById("addToCart");
+addToCart.addEventListener("click", () => {
+    const addObject = {
+        quantity: document.getElementById("quantity").value,
+        color: document.getElementById("colors").value,
+        id: idProduct
+    }
+});
 
 
 // const quantityObject = document.getElementById("quantity")
