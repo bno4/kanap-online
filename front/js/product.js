@@ -36,10 +36,7 @@ function fetchProduct() {
                 colorOption.value = color;
                 colorOption.innerText = color;
                 colorsObject.appendChild(colorOption);
-
             });
-            const quantityObject = document.getElementById("quantity");
-
         }
         )
 }
@@ -48,17 +45,42 @@ function fetchProduct() {
 fetchProduct();
 
 
-
 const addToCart = document.getElementById("addToCart");
-addToCart.addEventListener("click", () => {
+
+addToCart.addEventListener("click", (event) => {
+    event.preventDefault();
+    let selectedColor = document.querySelector("#colors").value;
+    let selectedQuantity = document.querySelector("#quantity").value;
+    let selectedProductName = document.getElementById("title").innerText;
+    ;
     const addObject = {
-        quantity: document.getElementById("quantity").value,
-        color: document.getElementById("colors").value,
-        id: idProduct
+        name: selectedProductName,
+        id: idProduct,
+        quantity: selectedQuantity,
+        color: selectedColor,
     }
+    if (selectedColor == false) {
+        alert("Merci de sélectionner une couleur");
+    } else if (selectedQuantity < 1 || selectedQuantity > 100) {
+        alert("Merci de choisir une quantité entre 1 et 100");
+    } else {
+        alert("Votre article a bien été ajouté au panier")
+    }
+    console.log(addObject);
+
+    /*-----------------Local Storage-----------*/
+    // Déclaration de la variable de stock des clés/valeurs du local storage + conversion JSON > JS
+    let objectToLocalStorage = JSON.parse(window.localStorage.getItem("produit"));
+    // écoute du localstorage
+    if (objectToLocalStorage) {
+        objectToLocalStorage.push(addObject);
+        window.localStorage.setItem("produit", JSON.stringify(objectToLocalStorage));
+    }
+    //------- stock les choix de l'user dans le local storage-----//
+    else {
+        objectToLocalStorage = [];
+        objectToLocalStorage.push(addObject);
+        window.localStorage.setItem("produit", JSON.stringify(objectToLocalStorage));
+    }
+
 });
-
-
-// const quantityObject = document.getElementById("quantity")
-// quantityObject.addEventListener ("click", function () {
-
