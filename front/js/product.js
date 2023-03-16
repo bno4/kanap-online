@@ -52,11 +52,13 @@ addToCart.addEventListener("click", (event) => {
     let selectedColor = document.querySelector("#colors").value;
     let selectedQuantity = document.querySelector("#quantity").value;
     let selectedProductName = document.getElementById("title").innerText;
-    ;
+    let selectedPriceName = document.getElementById("price").innerText;
+
     const addObject = {
         name: selectedProductName,
         id: idProduct,
-        quantity: selectedQuantity,
+        quantity: parseInt(selectedQuantity, 10),
+        price: parseInt(selectedPriceName, 10),
         color: selectedColor,
     }
     if (selectedColor == false) {
@@ -68,19 +70,36 @@ addToCart.addEventListener("click", (event) => {
     }
     console.log(addObject);
 
-    /*-----------------Local Storage-----------*/
+    // ----------------- LOCAL STORAGE -----------------//
     // Déclaration de la variable de stock des clés/valeurs du local storage + conversion JSON > JS
-    let objectToLocalStorage = JSON.parse(window.localStorage.getItem("produit"));
+    let objectInLocalStorage = JSON.parse(window.localStorage.getItem("cartProduct"));
     // écoute du localstorage
-    if (objectToLocalStorage) {
-        objectToLocalStorage.push(addObject);
-        window.localStorage.setItem("produit", JSON.stringify(objectToLocalStorage));
+    if (objectInLocalStorage) {
+        // recherche d'un produit similaire à celui en passe d'être ajouté par l'utilisateur
+        let item = objectInLocalStorage.find(
+            (item) => item.id == addObject.id && item.color == addObject.color);
+
+        // si produit déjà présent, Incrémentation de la quantité et mise à jour du produit
+        if (item) {
+            item.quantity = item.quantity + addObject.quantity;
+            item.totalPrice += item.price * addObject.quantity;
+            localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
+            console.log("Quantité supplémentaire dans le panier.");
+            return;
+        }
+        // si pas de produit similaire, push des choix utilisateur
+        objectInLocalStorage.push(addObject);
+        window.localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
+        console.log("Le produit a été ajouté au panier");
+
     }
     //------- stock les choix de l'user dans le local storage-----//
     else {
-        objectToLocalStorage = [];
-        objectToLocalStorage.push(addObject);
-        window.localStorage.setItem("produit", JSON.stringify(objectToLocalStorage));
+        let pushObjectToLocalStorage = [];
+        pushObjectToLocalStorage.push(addObject);
+        window.localStorage.setItem("cartProduct", JSON.stringify(pushObjectToLocalStorage));
+        console.log("Le panier est vide, on  le premier produit");
+
     }
 
 });
