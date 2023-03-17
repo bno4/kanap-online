@@ -60,6 +60,7 @@ addToCart.addEventListener("click", (event) => {
         quantity: parseInt(selectedQuantity, 10),
         price: parseInt(selectedPriceName, 10),
         color: selectedColor,
+        totalPrice: parseInt(quantity, 10) * parseInt(price, 10),
     }
     if (selectedColor == false) {
         alert("Merci de sélectionner une couleur");
@@ -84,13 +85,13 @@ addToCart.addEventListener("click", (event) => {
             item.quantity = item.quantity + addObject.quantity;
             item.totalPrice += item.price * addObject.quantity;
             localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
-            console.log("Quantité supplémentaire dans le panier.");
+            console.log("Ajout de(s) produit(s) supplémentaire(s)");
             return;
         }
-        // si pas de produit similaire, push des choix utilisateur
+        // si pas de produit similaire, push des choix de l'utilisateur
         objectInLocalStorage.push(addObject);
         window.localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
-        console.log("Le produit a été ajouté au panier");
+        console.log("produit ajouté au panier");
 
     }
     //------- stock les choix de l'user dans le local storage-----//
