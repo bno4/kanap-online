@@ -15,7 +15,7 @@ if (objectInLocalStorage === null) {
 } else {
     //Si un produit est dans le panier boucle for pour pacourir le localstorage
     let productsInCart = [];
-    for (let i = 0; i < objectInLocalStorage.length; i++) {
+    objectInLocalStorage.map(product => {
         console.log(objectInLocalStorage.length + ` éléments dans le panier`);
 
         productsInCart = productsInCart.innerHTML += `<article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
@@ -40,7 +40,8 @@ if (objectInLocalStorage === null) {
         </div>
       </article>`;
 
-    }
+    })
 
 
 };
+

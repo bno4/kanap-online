@@ -57,10 +57,10 @@ addToCart.addEventListener("click", (event) => {
     const addObject = {
         name: selectedProductName,
         id: idProduct,
-        quantity: parseInt(selectedQuantity, 10),
-        price: parseInt(selectedPriceName, 10),
+        quantity: parseInt(selectedQuantity),
+        // price: parseInt(selectedPriceName),
         color: selectedColor,
-        totalPrice: parseInt(quantity, 10) * parseInt(price, 10),
+        // totalPrice: parseInt(selectedQuantity) * parseInt(selectedPriceName),
     }
     if (selectedColor == false) {
         alert("Merci de sélectionner une couleur");
@@ -83,7 +83,7 @@ addToCart.addEventListener("click", (event) => {
         // si produit déjà présent, Incrémentation de la quantité et mise à jour du produit
         if (item) {
             item.quantity = item.quantity + addObject.quantity;
-            item.totalPrice += item.price * addObject.quantity;
+            // item.totalPrice += item.price * addObject.quantity;
             localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
             console.log("Ajout de(s) produit(s) supplémentaire(s)");
             return;
