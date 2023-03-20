@@ -40,10 +40,8 @@ function fetchProduct() {
         }
         )
 }
-
 // Appel de la fonction qui affichera les éléments de l'objet "canapé"
 fetchProduct();
-
 
 const addToCart = document.getElementById("addToCart");
 
@@ -53,14 +51,19 @@ addToCart.addEventListener("click", (event) => {
     let selectedQuantity = document.querySelector("#quantity").value;
     let selectedProductName = document.getElementById("title").innerText;
     let selectedPriceName = document.getElementById("price").innerText;
+    let selectedImage = document.querySelector(".item__img img").src;
+    let selectedImageAlt = document.querySelector(".item__img img").alt;
+
 
     const addObject = {
-        name: selectedProductName,
         id: idProduct,
-        quantity: parseInt(selectedQuantity),
-        // price: parseInt(selectedPriceName),
+        name: selectedProductName,
+        image: selectedImage,
+        alt_image: selectedImageAlt,
         color: selectedColor,
-        // totalPrice: parseInt(selectedQuantity) * parseInt(selectedPriceName),
+        quantity: parseInt(selectedQuantity),
+        price: parseInt(selectedPriceName),
+        totalPrice: parseInt(selectedQuantity) * parseInt(selectedPriceName),
     }
     if (selectedColor == false) {
         alert("Merci de sélectionner une couleur");
@@ -99,7 +102,7 @@ addToCart.addEventListener("click", (event) => {
         let pushObjectToLocalStorage = [];
         pushObjectToLocalStorage.push(addObject);
         window.localStorage.setItem("cartProduct", JSON.stringify(pushObjectToLocalStorage));
-        console.log("Le panier est vide, on  le premier produit");
+        console.log("Le panier est vide, on ajoute le 1er produit");
 
     }
 
