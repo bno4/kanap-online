@@ -63,7 +63,7 @@ addToCart.addEventListener("click", (event) => {
         color: selectedColor,
         quantity: parseInt(selectedQuantity),
         price: parseInt(selectedPriceName),
-        totalPrice: parseInt(selectedQuantity) * parseInt(selectedPriceName),
+        // totalPrice: parseInt(selectedQuantity) * parseInt(selectedPriceName),
     }
     if (selectedColor == false) {
         alert("Merci de sélectionner une couleur");

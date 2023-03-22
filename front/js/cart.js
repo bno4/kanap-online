@@ -75,18 +75,41 @@ if (objectInLocalStorage === null) {
     deleteDiv.appendChild(deleteButton);
   });
 };
+// Fonction d'affichage de la quantité globale de produits dans le panier
+let totalQuantity = document.getElementById('totalQuantity')
+function totalQuantityInCart() {
+  let quantitySum = 0;
+  if (objectInLocalStorage.length === 0) {
+    totalPrice.innerText = "0";
+  } else {
+    for (let quantityProductsInCart of objectInLocalStorage) {
+      let quantityProducts = quantityProductsInCart.quantity;
+      let quantityTotal = parseInt(quantityProducts);
+      quantitySum += quantityTotal;
+      totalQuantity.innerText = quantitySum;
+    }
+  }
+};
+document.addEventListener('DOMContentLoaded', totalQuantityInCart);
 
-// let inputs = document.querySelector('.itemQuantity');
-// inputs.addEventListener("change", (event) => {
-//   event.preventDefault();
-//   inputs.map(input => {
-//     input.addEventListener("change", (e) => {
-//       let selectedQuantity = e.target.value;
-//       if (selectedQuantity == 0 || selectedQuantity >= 100) {
-//         console.error("Merci de choisir une quantité entre 1 et 100");
-//         selectedQuantity = product.quantity;
-//       } 
-//   })
 
-// });
+// Fonction d'affichage du prix total du panier
+let totalPrice = document.getElementById('totalPrice');
+function totalPriceInCart() {
+  let priceSum = 0;
+  if (objectInLocalStorage.length === 0) {
+    totalPrice.innerText = "0";
 
+  } else {
+    for (let priceProduct of objectInLocalStorage) {
+      let productsPrice = priceProduct.price;
+      let priceItems = parseInt(productsPrice);
+      priceSum += (priceItems * priceProduct.quantity);
+      totalPrice.innerText = priceSum;
+    }
+  }
+};
+document.addEventListener('DOMContentLoaded', totalPriceInCart);
+
+// Fonction de suppression d'un produit ("item" dans la fonction) du panier
+const deleteItem = document.getElementById('deleItem');
