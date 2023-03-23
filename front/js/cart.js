@@ -1,12 +1,13 @@
 // Déclaration de la variable de stock des clés/valeurs du local storage + conversion JSON > JS
-let objectInLocalStorage = JSON.parse(window.localStorage.getItem("cartProduct"));
+let objectInLocalStorage = JSON.parse(localStorage.getItem("cartProduct"));
 // écoute du localstorage
 console.log(objectInLocalStorage);
 
+//-----------------------------------------------------------------
 // sélection de la classe ou j'affiche l'html
 const cartState = document.querySelector('#cart__items');
 
-if (objectInLocalStorage === null) {
+if (objectInLocalStorage === null || objectInLocalStorage === 0) {
   console.log("panier vide");
   const emptyCart = document.createElement('div');
   emptyCart.innerText = `Le panier est vide`;
@@ -14,11 +15,13 @@ if (objectInLocalStorage === null) {
 
 } else {
   //Si un produit est dans le panier boucle map pour pacourir le localstorage
-  let productsInCart = [];
+  // let productsInCart = [];
+
   // for (i = 0; i < objectInLocalStorage.length; i++) 
   objectInLocalStorage.map(product => {
     console.log(objectInLocalStorage.length + ` éléments dans le panier`);
     // création de la balise article et récupération des data du localstorage
+
     const articleCart = document.createElement("article");
     articleCart.className = 'cart__item';
     articleCart.dataset.id = product.id;
@@ -59,6 +62,7 @@ if (objectInLocalStorage === null) {
     const deleteDiv = document.createElement('div');
     deleteDiv.className = 'cart__item__content__settings__delete';
     const deleteButton = document.createElement('p');
+    deleteButton.className = 'deleteItem'
     deleteButton.innerText = "Supprimer";
 
     // architecture HTML
@@ -75,6 +79,7 @@ if (objectInLocalStorage === null) {
     deleteDiv.appendChild(deleteButton);
   });
 };
+//-----------------------------------------------------------------
 // Fonction d'affichage de la quantité globale de produits dans le panier
 let totalQuantity = document.getElementById('totalQuantity')
 function totalQuantityInCart() {
@@ -89,10 +94,11 @@ function totalQuantityInCart() {
       totalQuantity.innerText = quantitySum;
     }
   }
+  console.log(quantitySum);
 };
-document.addEventListener('DOMContentLoaded', totalQuantityInCart);
+totalQuantityInCart();
 
-
+//-----------------------------------------------------------------
 // Fonction d'affichage du prix total du panier
 let totalPrice = document.getElementById('totalPrice');
 function totalPriceInCart() {
@@ -108,8 +114,63 @@ function totalPriceInCart() {
       totalPrice.innerText = priceSum;
     }
   }
+  console.log(priceSum);
 };
-document.addEventListener('DOMContentLoaded', totalPriceInCart);
+totalPriceInCart();
 
-// Fonction de suppression d'un produit ("item" dans la fonction) du panier
-const deleteItem = document.getElementById('deleItem');
+//-----------------------------------------------------------------
+// function de modification de quantité
+function modifQuantity() {
+  let quantityModify = document.querySelectorAll(".itemQuantity")
+  for (let i = 0; i < quantityModify.length; i++) {
+    quantityModify[i].addEventListener("change", (event) => {
+      event.preventDefault();
+
+      //sélection de l'élément à modifier
+      let quantityToModif = objectInLocalStorage[i].quantity;
+      let quantityModifValue = quantityModify[i].valueAsNumber;
+
+      const resultFind = objectInLocalStorage.find((el) => el.quantityModifValue !== quantityToModif)
+
+      resultFind.quantity = quantityModifValue;
+      objectInLocalStorage[i].quantity = resultFind.quantity;
+
+      localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
+
+      // refresh
+      location.reload();
+
+    })
+  }
+  console.log(quantityModify);
+};
+modifQuantity()
+
+//-----------------------------------------------------------------
+// function de suppression d'un produit
+function deleteArticle() {
+  let deleteItem = document.querySelectorAll('.deleteItem');
+
+  for (let j = 0; j < deleteItem.length; j++) {
+    deleteItem[j].addEventListener("click", (event) => {
+      event.preventDefault();
+
+      // selection du produit (cf. même chose que pour la quantié)
+      let idToDelete = objectInLocalStorage[j].id;
+      let colorToDelete = objectInLocalStorage[j].color;
+
+      objectInLocalStorage = objectInLocalStorage.filter((el) => el.id !== idToDelete || el.color !== colorToDelete);
+
+      localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
+      //Alerte produit supprimé et refresh
+      alert("Ce produit a bien été supprimé du panier");
+      location.reload();
+    })
+
+
+
+  }
+  console.log(deleteItem);
+};
+deleteArticle();
+

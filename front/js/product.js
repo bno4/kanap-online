@@ -76,7 +76,7 @@ addToCart.addEventListener("click", (event) => {
 
     // ----------------- LOCAL STORAGE -----------------//
     // Déclaration de la variable de stock des clés/valeurs du local storage + conversion JSON > JS
-    let objectInLocalStorage = JSON.parse(window.localStorage.getItem("cartProduct"));
+    let objectInLocalStorage = JSON.parse(localStorage.getItem("cartProduct"));
     // écoute du localstorage
     if (objectInLocalStorage) {
         // recherche d'un produit similaire à celui en passe d'être ajouté par l'utilisateur
@@ -93,7 +93,7 @@ addToCart.addEventListener("click", (event) => {
         }
         // si pas de produit similaire, push des choix de l'utilisateur
         objectInLocalStorage.push(addObject);
-        window.localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
+        localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
         console.log("produit ajouté au panier");
 
     }
@@ -101,7 +101,7 @@ addToCart.addEventListener("click", (event) => {
     else {
         let pushObjectToLocalStorage = [];
         pushObjectToLocalStorage.push(addObject);
-        window.localStorage.setItem("cartProduct", JSON.stringify(pushObjectToLocalStorage));
+        localStorage.setItem("cartProduct", JSON.stringify(pushObjectToLocalStorage));
         console.log("Le panier est vide, on ajoute le 1er produit");
 
     }
