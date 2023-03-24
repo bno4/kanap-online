@@ -130,14 +130,15 @@ function modifQuantity() {
       let quantityToModif = objectInLocalStorage[i].quantity;
       let quantityModifValue = quantityModify[i].valueAsNumber;
 
-      const resultFind = objectInLocalStorage.find((el) => el.quantityModifValue !== quantityToModif)
+      const resultFind = objectInLocalStorage.find((element) => element.quantityModifValue !== quantityToModif)
 
       resultFind.quantity = quantityModifValue;
       objectInLocalStorage[i].quantity = resultFind.quantity;
 
       localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
 
-      // refresh
+
+      // REMOVE ARTICLE IDEM pour BUTTON SUPPR
       location.reload();
 
     })
@@ -151,13 +152,14 @@ modifQuantity()
 function deleteArticle() {
   let deleteItem = document.querySelectorAll('.deleteItem');
 
-  for (let j = 0; j < deleteItem.length; j++) {
-    deleteItem[j].addEventListener("click", (event) => {
+  for (let i = 0; i < deleteItem.length; i++) {
+    // !! Ajouter DOM "le panier est vide if objectinlocalstorage === 0"
+    deleteItem[i].addEventListener("click", (event) => {
       event.preventDefault();
 
-      // selection du produit (cf. même chose que pour la quantié)
-      let idToDelete = objectInLocalStorage[j].id;
-      let colorToDelete = objectInLocalStorage[j].color;
+      // selection du produit par l'ID et la Couleur
+      let idToDelete = objectInLocalStorage[i].id;
+      let colorToDelete = objectInLocalStorage[i].color;
 
       objectInLocalStorage = objectInLocalStorage.filter((el) => el.id !== idToDelete || el.color !== colorToDelete);
 
@@ -173,4 +175,39 @@ function deleteArticle() {
   console.log(deleteItem);
 };
 deleteArticle();
+
+
+//--------------------------------------------------------------
+// Le formulaire
+const buttonSubmit = document.getElementById('order');
+
+// récupération des données du formulaire
+buttonSubmit.addEventListener("click", (event) => {
+  event.preventDefault();
+
+  let contact = {
+    firstName: document.querySelector("#firstName").value,
+    lastName: document.querySelector("#lastName").value,
+    address: document.querySelector("#address").value,
+    city: document.querySelector("#city").value,
+    email: document.querySelector("#email").value
+  }
+
+  // functions de validation des champs firstname, lastname, adresse, ville, email
+
+
+
+
+
+  console.log(contact);
+  localStorage.setItem("contact", JSON.stringify(contact));
+
+  const commandToLocalStorage = {
+    objectInLocalStorage,
+    contact
+  }
+  console.log(commandToLocalStorage);
+});
+
+
 
