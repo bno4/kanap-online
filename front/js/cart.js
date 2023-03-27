@@ -14,10 +14,7 @@ if (objectInLocalStorage === null || objectInLocalStorage === 0) {
   cartState.appendChild(emptyCart);
 
 } else {
-  //Si un produit est dans le panier boucle map pour pacourir le localstorage
-  // let productsInCart = [];
-
-  // for (i = 0; i < objectInLocalStorage.length; i++) 
+  //Si un produit est dans le panier, boucle map pour pacourir le localstorage
   objectInLocalStorage.map(product => {
     console.log(objectInLocalStorage.length + ` éléments dans le panier`);
     // création de la balise article et récupération des data du localstorage
@@ -78,14 +75,42 @@ if (objectInLocalStorage === null || objectInLocalStorage === 0) {
     divContentSettings.appendChild(deleteDiv);
     deleteDiv.appendChild(deleteButton);
   });
+  const deleteItem = document.querySelectorAll('.deleteItem');
+  deleteItem.forEach((item) => {
+    const itemTarget = item.closest("article");
+    const itemId = itemTarget.dataset.id;
+    const articleTarget = itemTarget;
+    const itemColor = itemTarget.dataset.color;
+    // écoute du clik sur le bouton cible
+    item.addEventListener("click", (event) => {
+      event.preventDefault();
+      objectInLocalStorage.map((product) => {
+        if (product.id == itemId && product.color == itemColor) {
+          // récupération de l'ID du produit cible
+          let index = objectInLocalStorage.indexOf(product); // récupération de l'index du produit cible
+          objectInLocalStorage.splice(index, 1);
+          articleTarget.remove()
+          localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
+          //Alerte produit supprimé et refresh
+          alert("Ce produit a bien été supprimé du panier");
+        }
+      })
+      totalQuantityInCart();
+      totalPriceInCart();
+
+    });
+
+
+  });
 };
+
 //-----------------------------------------------------------------
 // Fonction d'affichage de la quantité globale de produits dans le panier
 let totalQuantity = document.getElementById('totalQuantity')
 function totalQuantityInCart() {
   let quantitySum = 0;
   if (objectInLocalStorage.length === 0) {
-    totalPrice.innerText = "0";
+    totalQuantity.innerText = "0";
   } else {
     for (let quantityProductsInCart of objectInLocalStorage) {
       let quantityProducts = quantityProductsInCart.quantity;
@@ -136,46 +161,78 @@ function modifQuantity() {
       objectInLocalStorage[i].quantity = resultFind.quantity;
 
       localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
+      totalPriceInCart();
+      totalQuantityInCart();
+    });
 
-
-      // REMOVE ARTICLE IDEM pour BUTTON SUPPR
-      location.reload();
-
-    })
   }
   console.log(quantityModify);
 };
 modifQuantity()
+totalPriceInCart();
+totalQuantityInCart();
+
 
 //-----------------------------------------------------------------
 // function de suppression d'un produit
-function deleteArticle() {
-  let deleteItem = document.querySelectorAll('.deleteItem');
-
-  for (let i = 0; i < deleteItem.length; i++) {
-    // !! Ajouter DOM "le panier est vide if objectinlocalstorage === 0"
-    deleteItem[i].addEventListener("click", (event) => {
-      event.preventDefault();
-
-      // selection du produit par l'ID et la Couleur
-      let idToDelete = objectInLocalStorage[i].id;
-      let colorToDelete = objectInLocalStorage[i].color;
-
-      objectInLocalStorage = objectInLocalStorage.filter((el) => el.id !== idToDelete || el.color !== colorToDelete);
-
-      localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
-      //Alerte produit supprimé et refresh
-      alert("Ce produit a bien été supprimé du panier");
-      location.reload();
-    })
-
+// const deleteItem = document.querySelectorAll('.deleteItem');
+// deleteItem.forEach((item) => {
+//   const itemTarget = item.closest("article");
+//   const itemId = itemTarget.dataset.id;
+//   const articleTarget = itemTarget;
+//   const itemColor = itemTarget.dataset.color;
+//   // écoute du clik sur le bouton cible
+//   item.addEventListener("click", (event) => {
+//     event.preventDefault();
+//     objectInLocalStorage.map((product) => {
+//       if (product.id == itemId && product.color == itemColor) {
+//         // récupération de l'ID du produit cible
+//         let index = objectInLocalStorage.indexOf(product); // récupération de l'index du produit cible
+//         objectInLocalStorage.splice(index, 1);
+//         articleTarget.remove()
+//         localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
+//         //Alerte produit supprimé et refresh
+//         alert("Ce produit a bien été supprimé du panier");
 
 
-  }
-  console.log(deleteItem);
-};
-deleteArticle();
+//       }
+//     })
 
+//   });
+//   totalPriceInCart();
+//   totalQuantityInCart();
+//   console.log(deleteItem);
+
+// });
+
+//**************** ancien code qui marche moyen
+// function deleteArticle() {
+//   let deleteItem = document.querySelectorAll('.deleteItem');
+
+//   for (let i = 0; i < deleteItem.length; i++) {
+//     // !! Ajouter DOM "le panier est vide if objectinlocalstorage === 0"
+//     deleteItem[i].addEventListener("click", (event) => {
+//       event.preventDefault();
+
+//       // selection du produit par l'ID et la Couleur
+//       let idToDelete = objectInLocalStorage[i].id;
+//       let colorToDelete = objectInLocalStorage[i].color;
+
+//       objectInLocalStorage = objectInLocalStorage.filter((el) => el.id !== idToDelete || el.color !== colorToDelete);
+
+//       localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
+//       //Alerte produit supprimé et refresh
+//       alert("Ce produit a bien été supprimé du panier");
+//       window.location.reload();
+//     })
+
+
+
+//   }
+//   console.log(deleteItem);
+// };
+// deleteArticle();
+//****************************************************** */ 
 
 //--------------------------------------------------------------
 // Le formulaire
