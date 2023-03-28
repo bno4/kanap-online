@@ -94,7 +94,7 @@ function totalQuantityInCart() {
       totalQuantity.innerText = quantitySum;
     }
   }
-  console.log(quantitySum);
+  console.log(quantitySum + ` = nb total de canapés dans le panier`);
 };
 totalQuantityInCart();
 
