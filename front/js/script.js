@@ -23,15 +23,15 @@ function fetchData() {
                 nameProduct.innerText = product.name;
                 const descriptionProduct = document.createElement("p");
                 descriptionProduct.innerText = product.description;
-                const priceProduct = document.createElement("p");
-                priceProduct.innerText = `${product.price} €`;
+                // const priceProduct = document.createElement("p");
+                // priceProduct.innerText = `${product.price} €`;
                 // architecture des éléments a > article > img > h3 > p
                 sectionProducts.appendChild(linkProduct);
                 linkProduct.appendChild(articleProduct);
                 articleProduct.appendChild(imageProduct);
                 articleProduct.appendChild(nameProduct);
                 articleProduct.appendChild(descriptionProduct);
-                articleProduct.appendChild(priceProduct);
+                // articleProduct.appendChild(priceProduct);
 
             }
         }

@@ -54,7 +54,6 @@ addToCart.addEventListener("click", (event) => {
     let selectedImage = document.querySelector(".item__img img").src;
     let selectedImageAlt = document.querySelector(".item__img img").alt;
 
-
     const addObject = {
         id: idProduct,
         name: selectedProductName,
@@ -62,7 +61,7 @@ addToCart.addEventListener("click", (event) => {
         alt_image: selectedImageAlt,
         color: selectedColor,
         quantity: parseInt(selectedQuantity),
-        price: parseInt(selectedPriceName),
+        // price: parseInt(selectedPriceName),
         // totalPrice: parseInt(selectedQuantity) * parseInt(selectedPriceName),
     }
     if (selectedColor == false) {
