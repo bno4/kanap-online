@@ -1,9 +1,12 @@
+
 // Déclaration de la variable de stock des clés/valeurs du local storage + conversion JSON > JS
 let objectInLocalStorage = JSON.parse(localStorage.getItem("cartProduct"));
 // écoute du localstorage
 console.log(objectInLocalStorage);
+// Déclaration du tableau dans lequel seront envoyées les donnée du panier
+let products = [];
 
-//-----------------------------------------------------------------
+//-----------------------------------------------------
 // sélection de la classe ou j'affiche l'html
 const cartState = document.querySelector('#cart__items');
 
@@ -18,6 +21,7 @@ if (objectInLocalStorage === null || objectInLocalStorage === 0) {
   //Si un produit est dans le panier, boucle map pour pacourir le localstorage
   objectInLocalStorage.map(product => {
     console.log(objectInLocalStorage.length + ` éléments dans le panier`);
+    products.push(product.id);
 
 
     // création de la balise article et récupération des data du localstorage
@@ -56,7 +60,7 @@ if (objectInLocalStorage === null || objectInLocalStorage === 0) {
       .catch(error => alert("Erreur : " + error));
 
 
-    // création du bloc d'ajustement de la quantité de canapés
+    // création du bloc de modification de la quantité des canapés
     const divContentSettings = document.createElement("div");
     divContentSettings.className = 'cart__item__content__settings';
     const divContentQty = document.createElement("div");
@@ -110,13 +114,13 @@ function totalQuantityInCart() {
 };
 totalQuantityInCart();
 
-// Récupération de produit dans l'API via son id 
-async function getProduct(id) {
-  return fetch("http://localhost:3000/api/products/" + id)
-    .then(response => response.json())
-    .catch(error => alert("Erreur : " + error));
-}
-//-----------------------------------------------------------------
+// // Récupération de produit dans l'API via son id 
+// async function getProduct(id) {
+//   return fetch("http://localhost:3000/api/products/" + id)
+//     .then(response => response.json())
+//     .catch(error => alert("Erreur : " + error));
+// }
+// //-----------------------------------------------------------------
 // Fonction d'affichage du prix total du panier
 let totalPrice = document.getElementById('totalPrice');
 function totalPriceInCart() {
@@ -196,7 +200,6 @@ deleteItem.forEach((item) => {
     })
     totalQuantityInCart();
     totalPriceInCart();
-
   });
 });
 
@@ -288,12 +291,12 @@ function postForm() {
     };
     validForm();
 
-
     // regroupement du panier sélectionné et donnée du formulaire dans un objet
     const commandToLocalStorage = {
-      objectInLocalStorage,
+      products,
       contact,
     };
+    console.log("commandToLocalStorage");
     console.log(commandToLocalStorage)
     // Envoi de l'objet formulaire et panier dans le serveur
     const opts = {
