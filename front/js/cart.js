@@ -2,6 +2,7 @@
 let objectInLocalStorage = JSON.parse(localStorage.getItem("cartProduct"));
 // écoute du localstorage
 console.log(objectInLocalStorage);
+let orderId = "";
 
 //-----------------------------------------------------------------
 // sélection de la classe ou j'affiche l'html
@@ -225,19 +226,7 @@ buttonSubmit.addEventListener("click", (event) => {
     email: document.querySelector("#email").value
   };
 
-  // function de validation de l'ensemble du formulaire
-  function validForm() {
-    if (checkFirstname() && checkLastName() && checkAddress() && checkCity() && checkEmail()) {
-      alert("commande confirmée !")
-      localStorage.setItem("contact", JSON.stringify(contact))
-      return true;
 
-    }
-    else {
-      alert("Un champ est vide ou mal renseigné")
-    }
-  };
-  validForm();
   // Vérification des champs prénom, nom, adresse, ville et email
   function checkFirstname() {
     const firstNameOK = contact.firstName;
@@ -284,14 +273,44 @@ buttonSubmit.addEventListener("click", (event) => {
       emailErrorMsg.innerText = "Format incorrect, merci de saisir une adresse email valide";
     };
   };
+  // function de validation de l'ensemble du formulaire
+  function validForm() {
+    if (objectInLocalStorage.length >= 1 && checkFirstname() && checkLastName() && checkAddress() && checkCity() && checkEmail()) {
+      alert("commande confirmée !")
+      localStorage.setItem("contact", JSON.stringify(contact))
+      return true;
+
+    }
+    else {
+      alert("Un champ est vide ou mal renseigné")
+    }
+  };
+  validForm();
 
 
+  // regroupement du panier sélectionné et donnée du formulaire dans un objet
+  const commandToLocalStorage = {
+    objectInLocalStorage,
+    contact
+  };
+  // Envoi de l'objet formulaire et panier dans le serveur
+  const opts = {
+    method: 'POST',
+    body: JSON.stringify(commandToLocalStorage),
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  };
+
+  fetch("http://localhost:3000/api/products/order", opts)
+    .then(response => response.json())
+    .then(data => {
+      localStorage.setItem('orderId', data.orderId);
+      if (validForm()) {
+        document.location.href = 'confirmation.html?id=' + data.orderId;
+      }
+    });
 
 
-  // const commandToLocalStorage = {
-  //   objectInLocalStorage,
-  //   contact
-  // }
-  // console.log(commandToLocalStorage);
 });
 
