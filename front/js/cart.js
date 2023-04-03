@@ -3,7 +3,7 @@
 let objectInLocalStorage = JSON.parse(localStorage.getItem("cartProduct"));
 // écoute du localstorage
 console.log(objectInLocalStorage);
-// Déclaration du tableau dans lequel seront envoyées les donnée du panier
+// Déclaration du tableau dans lequel seront envoyées lors de la commandes les ID des produits
 let products = [];
 
 //-----------------------------------------------------
@@ -12,7 +12,7 @@ const cartState = document.querySelector('#cart__items');
 
 if (objectInLocalStorage === null || objectInLocalStorage === 0) {
   console.log("panier vide");
-  const emptyCart = document.createElement('h2');
+  const emptyCart = document.createElement('h1');
   emptyCart.innerHtml = `Le panier est vide`;
   cartState.appendChild(emptyCart);
 
@@ -22,7 +22,6 @@ if (objectInLocalStorage === null || objectInLocalStorage === 0) {
   objectInLocalStorage.map(product => {
     console.log(objectInLocalStorage.length + ` éléments dans le panier`);
     products.push(product.id);
-
 
     // création de la balise article et récupération des data du localstorage
 
@@ -94,6 +93,8 @@ if (objectInLocalStorage === null || objectInLocalStorage === 0) {
   });
 };
 
+
+
 //-----------------------------------------------------------------
 // Fonction d'affichage de la quantité totale de produits dans le panier
 let totalQuantity = document.getElementById('totalQuantity')
@@ -114,14 +115,7 @@ function totalQuantityInCart() {
 };
 totalQuantityInCart();
 
-// // Récupération de produit dans l'API via son id 
-// async function getProduct(id) {
-//   return fetch("http://localhost:3000/api/products/" + id)
-//     .then(response => response.json())
-//     .catch(error => alert("Erreur : " + error));
-// }
-// //-----------------------------------------------------------------
-// Fonction d'affichage du prix total du panier
+
 let totalPrice = document.getElementById('totalPrice');
 function totalPriceInCart() {
   let priceSum = 0;
@@ -142,13 +136,14 @@ function totalPriceInCart() {
           // let priceItems = parseInt(productsPrice);
           priceSum += (productsPrice * sofa.quantity);
           totalPrice.innerText = priceSum;
+          console.log(priceSum + ' € prix total');
         })
         .catch(error => alert("Erreur : " + error));
     }
   }
-  console.log(priceSum);
 };
 totalPriceInCart();
+
 
 //-----------------------------------------------------------------
 // function de modification de quantité
@@ -174,6 +169,7 @@ for (let i = 0; i < quantityModify.length; i++) {
     localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
     totalPriceInCart();
     totalQuantityInCart();
+
   });
 }
 //-----------------------------------------------------------------
@@ -200,8 +196,22 @@ deleteItem.forEach((item) => {
     })
     totalQuantityInCart();
     totalPriceInCart();
+
   });
 });
+//---------------mise à jour qté de la commande ----------- //
+
+
+let commandDetails = [];
+objectInLocalStorage.map((cmd) => {
+  let addCmd = {
+    id: cmd.id,
+    color: cmd.color,
+    quantity: cmd.quantity,
+  };
+  commandDetails.push(addCmd);
+
+})
 
 //-----------------------Le formulaire -----------------------//
 function postForm() {
@@ -297,6 +307,7 @@ function postForm() {
     // regroupement du panier sélectionné et donnée du formulaire dans un objet
     const commandToLocalStorage = {
       products,
+      commandDetails,
       contact,
     };
     console.log("commandToLocalStorage");
@@ -323,3 +334,14 @@ function postForm() {
   });
 }
 postForm();
+
+
+
+// // Récupération de produit dans l'API via son id 
+// async function getProduct(id) {
+//   return fetch("http://localhost:3000/api/products/" + id)
+//     .then(response => response.json())
+//     .catch(error => alert("Erreur : " + error));
+// }
+// //-----------------------------------------------------------------
+// Fonction d'affichage du prix total du panier
