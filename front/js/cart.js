@@ -97,8 +97,9 @@ if (objectInLocalStorage === null || objectInLocalStorage === 0) {
 
 //-----------------------------------------------------------------
 // Fonction d'affichage de la quantité totale de produits dans le panier
-let totalQuantity = document.getElementById('totalQuantity')
 function totalQuantityInCart() {
+  let totalQuantity = document.getElementById('totalQuantity')
+
   let quantitySum = 0;
   if (objectInLocalStorage.length == 0 || objectInLocalStorage === null) {
     totalQuantity.innerText = "0";
@@ -202,16 +203,16 @@ deleteItem.forEach((item) => {
 //---------------mise à jour qté de la commande ----------- //
 
 
-let commandDetails = [];
-objectInLocalStorage.map((cmd) => {
-  let addCmd = {
-    id: cmd.id,
-    color: cmd.color,
-    quantity: cmd.quantity,
-  };
-  commandDetails.push(addCmd);
+// let commandDetails = [];
+// objectInLocalStorage.map((cmd) => {
+//   let addCmd = {
+//     id: cmd.id,
+//     color: cmd.color,
+//     quantity: cmd.quantity,
+//   };
+//   commandDetails.push(addCmd);
 
-})
+// })
 
 //-----------------------Le formulaire -----------------------//
 function postForm() {
