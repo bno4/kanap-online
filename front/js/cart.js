@@ -232,6 +232,7 @@ function postForm() {
 
 
     // Vérification des champs prénom, nom, adresse, ville et email
+    // !!! checkINput cibléer le "p"
     function checkFirstname() {
       const firstNameOK = contact.firstName;
       if (regExFullNameCity.test(firstNameOK)) {
@@ -286,10 +287,12 @@ function postForm() {
 
       }
       else {
-        alert("Un champ est vide ou mal renseigné")
+        return false //( alert("Un champ est vide ou mal renseigné") )
       }
     };
     validForm();
+    // localStorage.setItem("contact", JSON.stringify(contact))
+    // opérateur ! if (validForm()) {}; 
 
     // regroupement du panier sélectionné et donnée du formulaire dans un objet
     const commandToLocalStorage = {
