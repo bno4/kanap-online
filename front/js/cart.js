@@ -112,11 +112,7 @@ function totalQuantityInCart() {
       totalQuantity.innerText = quantitySum;
     }
   }
-<<<<<<< HEAD
-  console.log(quantitySum + ` = nb total de canapés dans le panier`);
-=======
   console.log(quantitySum + ` = nbre de produits dans le panier`);
->>>>>>> dev
 };
 totalQuantityInCart();
 
