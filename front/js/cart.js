@@ -3,6 +3,8 @@
 let objectInLocalStorage = JSON.parse(localStorage.getItem("cartProduct"));
 console.log(objectInLocalStorage);
 
+// GET PRODUCT DATAS FROM API BY ID TO GET ITS PRICE
+
 //-----------------------------------------------------
 // sélection de la section où est affiché l'html
 const cartState = document.querySelector('#cart__items');
@@ -82,6 +84,8 @@ if (objectInLocalStorage === null || objectInLocalStorage === 0) {
     divContentQty.append(quantityItem, setQuantity);
     divContentSettings.appendChild(deleteDiv);
     deleteDiv.appendChild(deleteButton);
+
+
   });
 };
 
