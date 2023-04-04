@@ -1,30 +1,22 @@
 
-// Déclaration de la variable de stock des clés/valeurs du local storage + conversion JSON > JS
+// Déclaration de la variable de stock clés/valeurs du local storage
 let objectInLocalStorage = JSON.parse(localStorage.getItem("cartProduct"));
-// écoute du localstorage
 console.log(objectInLocalStorage);
-// Déclaration du tableau dans lequel seront envoyées lors de la commandes les ID des produits
-let products = [];
 
 //-----------------------------------------------------
-// sélection de la classe ou j'affiche l'html
+// sélection de la section où est affiché l'html
 const cartState = document.querySelector('#cart__items');
 
 if (objectInLocalStorage === null || objectInLocalStorage === 0) {
   console.log("panier vide");
-  const emptyCart = document.createElement('h1');
-  emptyCart.innerHtml = `Le panier est vide`;
-  cartState.appendChild(emptyCart);
 
 } else {
 
-  //Si un produit est dans le panier, boucle map pour pacourir le localstorage
+  //Si un produit est dans le panier, boucle "map" pour pacourir le localstorage
   objectInLocalStorage.map(product => {
     console.log(objectInLocalStorage.length + ` éléments dans le panier`);
-    products.push(product.id);
 
     // création de la balise article et récupération des data du localstorage
-
     const articleCart = document.createElement("article");
     articleCart.className = 'cart__item';
     articleCart.dataset.id = product.id;
@@ -46,6 +38,7 @@ if (objectInLocalStorage === null || objectInLocalStorage === 0) {
     titleItem.innerText = product.name;
     const colorItem = document.createElement('p');
     colorItem.innerText = product.color;
+
     // récupération du prix du produit depuis l'API
     let object = "";
     fetch("http://localhost:3000/api/products/" + product.id)
@@ -57,7 +50,6 @@ if (objectInLocalStorage === null || objectInLocalStorage === 0) {
         divContentDescription.appendChild(priceItem);
       })
       .catch(error => alert("Erreur : " + error));
-
 
     // création du bloc de modification de la quantité des canapés
     const divContentSettings = document.createElement("div");
@@ -93,16 +85,19 @@ if (objectInLocalStorage === null || objectInLocalStorage === 0) {
   });
 };
 
-
-
-//-----------------------------------------------------------------
+//----------------------------------------------------------------------
 // Fonction d'affichage de la quantité totale de produits dans le panier
 function totalQuantityInCart() {
   let totalQuantity = document.getElementById('totalQuantity')
 
   let quantitySum = 0;
-  if (objectInLocalStorage.length == 0 || objectInLocalStorage === null) {
-    totalQuantity.innerText = "0";
+  if (objectInLocalStorage == 0 || objectInLocalStorage === null) {
+    const emptySection = document.querySelector(".cart");
+    const emptyCart = document.querySelector("h1");
+    emptyCart.innerText = `Le panier est vide`;
+    emptySection.style.display = "none";
+    console.log('panier vide')
+    // totalQuantity.innerText = "0";
 
   } else {
     for (let quantityProductsInCart of objectInLocalStorage) {
@@ -116,15 +111,13 @@ function totalQuantityInCart() {
 };
 totalQuantityInCart();
 
-
+// ----------------------------------------------------------------
+// Fonction d'affichage du Prix total du panier
 let totalPrice = document.getElementById('totalPrice');
 function totalPriceInCart() {
   let priceSum = 0;
-  if (objectInLocalStorage.length === 0) {
-    const emptyCart = document.createElement('h2');
-    emptyCart.innerText = `Le panier est vide`;
-    cartState.appendChild(emptyCart);
-    totalPrice.innerText = "0";
+  if (objectInLocalStorage == null || objectInLocalStorage == 0) {
+    // totalPrice.innerText = "0";
 
   } else {
     for (let sofa of objectInLocalStorage) {
@@ -145,10 +138,8 @@ function totalPriceInCart() {
 };
 totalPriceInCart();
 
-
 //-----------------------------------------------------------------
 // function de modification de quantité
-// function modifQuantity() {
 let quantityModify = document.querySelectorAll(".itemQuantity")
 for (let i = 0; i < quantityModify.length; i++) {
   quantityModify[i].addEventListener("change", (event) => {
@@ -168,52 +159,42 @@ for (let i = 0; i < quantityModify.length; i++) {
     }
     console.log(productQuantity + ` nouvelle quantité du prod sélectionné`);
     localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
+    // mise à jour des totaux Prix et Quantité
     totalPriceInCart();
     totalQuantityInCart();
-
   });
 }
 //-----------------------------------------------------------------
 // function de suppression d'un produit
-const deleteItem = document.querySelectorAll('.deleteItem');
-deleteItem.forEach((item) => {
-  const itemTarget = item.closest("article");
-  const itemId = itemTarget.dataset.id;
-  const articleTarget = itemTarget;
-  const itemColor = itemTarget.dataset.color;
-  // écoute du clik sur le bouton cible
-  item.addEventListener("click", (event) => {
-    event.preventDefault();
-    objectInLocalStorage.map((product) => {
-      if (product.id == itemId && product.color == itemColor) {
-        // récupération de l'ID du produit cible
-        let index = objectInLocalStorage.indexOf(product); // récupération de l'index du produit cible
-        objectInLocalStorage.splice(index, 1);
-        articleTarget.remove()
-        localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
-        //Alerte produit supprimé et refresh
-        alert("Ce produit a bien été supprimé du panier");
-      }
-    })
-    totalQuantityInCart();
-    totalPriceInCart();
-
+function deleteArticle() {
+  const deleteItem = document.querySelectorAll('.deleteItem');
+  deleteItem.forEach((item) => {
+    const itemTarget = item.closest("article");
+    const itemId = itemTarget.dataset.id;
+    const articleTarget = itemTarget;
+    const itemColor = itemTarget.dataset.color;
+    // écoute du clik sur le bouton cible
+    item.addEventListener("click", (event) => {
+      event.preventDefault();
+      objectInLocalStorage.map((product) => {
+        if (product.id == itemId && product.color == itemColor) {
+          // récupération de l'ID du produit cible
+          let index = objectInLocalStorage.indexOf(product); // récupération de l'index du produit cible
+          objectInLocalStorage.splice(index, 1);
+          articleTarget.remove()
+          localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
+          //Alerte produit supprimé
+          alert("Ce produit a bien été supprimé du panier");
+        };
+      });
+      totalQuantityInCart();
+      totalPriceInCart();
+    });
   });
-});
-//---------------mise à jour qté de la commande ----------- //
+};
+deleteArticle();
 
-
-// let commandDetails = [];
-// objectInLocalStorage.map((cmd) => {
-//   let addCmd = {
-//     id: cmd.id,
-//     color: cmd.color,
-//     quantity: cmd.quantity,
-//   };
-//   commandDetails.push(addCmd);
-
-// })
-
+// ----------------------------------------------------------------------
 //-----------------------Le formulaire -----------------------//
 function postForm() {
   // sélection du bouton "commander"
@@ -240,7 +221,6 @@ function postForm() {
       city: document.querySelector("#city").value,
       email: document.querySelector("#email").value
     };
-
 
     // Vérification des champs prénom, nom, adresse, ville et email
     // !!! checkINput cibléer le "p"
@@ -305,7 +285,22 @@ function postForm() {
     // localStorage.setItem("contact", JSON.stringify(contact))
     // opérateur ! if (validForm()) {}; 
 
-    // regroupement du panier sélectionné et donnée du formulaire dans un objet
+    // regroupement des ID + couleur + quantité du panier sélectionné et données du formulaire dans un objet
+    let products = [];
+    let commandDetails = [];
+    objectInLocalStorage.map((product) => {
+      console.log(objectInLocalStorage.length + ` = màj du localstorage`);
+      products.push(product.id)
+      let addCmd = {
+        id: product.id,
+        color: product.color,
+        quantity: product.quantity,
+      };
+      commandDetails.push(addCmd);
+
+
+    });
+
     const commandToLocalStorage = {
       products,
       commandDetails,
