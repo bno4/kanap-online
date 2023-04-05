@@ -137,7 +137,6 @@ fetch('http://localhost:3000/api/products')
               priceSum += (productsPrice * sofa.quantity);
               totalPrice.innerText = priceSum;
               console.log(priceSum + ' € prix total');
-
             }
           }
         };
