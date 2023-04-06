@@ -1,9 +1,8 @@
-
 // Déclaration de la variable de stock clés/valeurs du local storage
 let objectInLocalStorage = JSON.parse(localStorage.getItem("cartProduct"));
 console.log(objectInLocalStorage);
-// Déclaration du tableau dans lequel seront envoyées lors de la commandes les ID des produits
-let products = [];
+
+// GET PRODUCT DATAS FROM API BY ID TO GET ITS PRICE
 
 //-----------------------------------------------------
 // sélection de la section où est affiché l'html
@@ -11,19 +10,14 @@ const cartState = document.querySelector('#cart__items');
 
 if (objectInLocalStorage === null || objectInLocalStorage === 0) {
   console.log("panier vide");
-  const emptyCart = document.createElement('h1');
-  emptyCart.innerHtml = `Le panier est vide`;
-  cartState.appendChild(emptyCart);
 
 } else {
 
-  //Si un produit est dans le panier, boucle map pour pacourir le localstorage
+  //Si un produit est dans le panier, boucle "map" pour pacourir le localstorage
   objectInLocalStorage.map(product => {
     console.log(objectInLocalStorage.length + ` éléments dans le panier`);
-    products.push(product.id);
 
     // création de la balise article et récupération des data du localstorage
-
     const articleCart = document.createElement("article");
     articleCart.className = 'cart__item';
     articleCart.dataset.id = product.id;
@@ -45,6 +39,7 @@ if (objectInLocalStorage === null || objectInLocalStorage === 0) {
     titleItem.innerText = product.name;
     const colorItem = document.createElement('p');
     colorItem.innerText = product.color;
+
     // récupération du prix du produit depuis l'API
     let object = "";
     fetch("http://localhost:3000/api/products/" + product.id)
@@ -56,7 +51,6 @@ if (objectInLocalStorage === null || objectInLocalStorage === 0) {
         divContentDescription.appendChild(priceItem);
       })
       .catch(error => alert("Erreur : " + error));
-
 
     // création du bloc de modification de la quantité des canapés
     const divContentSettings = document.createElement("div");
@@ -89,9 +83,10 @@ if (objectInLocalStorage === null || objectInLocalStorage === 0) {
     divContentQty.append(quantityItem, setQuantity);
     divContentSettings.appendChild(deleteDiv);
     deleteDiv.appendChild(deleteButton);
+
+
   });
 };
-showCart();
 
 //----------------------------------------------------------------------
 // Fonction d'affichage de la quantité totale de produits dans le panier
@@ -117,10 +112,10 @@ function totalQuantityInCart() {
   }
   console.log(quantitySum + ` = nbre de produits dans le panier`);
 };
-
 totalQuantityInCart();
 
-
+// ----------------------------------------------------------------
+// Fonction d'affichage du Prix total du panier
 let totalPrice = document.getElementById('totalPrice');
 function totalPriceInCart() {
   let priceSum = 0;
@@ -129,18 +124,12 @@ function totalPriceInCart() {
 
   } else {
     for (let sofa of objectInLocalStorage) {
-      let index = "";
-      fetch("http://localhost:3000/api/products/" + sofa.id)
-        .then(res => res.json())
-        .then(function (showRes) {
-          index = showRes;
-          let productsPrice = index.price;
-          // let priceItems = parseInt(productsPrice);
-          priceSum += (productsPrice * sofa.quantity);
-          totalPrice.innerText = priceSum;
-          console.log(priceSum + ' € prix total');
-        })
-        .catch(error => alert("Erreur : " + error));
+
+      let productsPrice = productApi.price;
+      // let priceItems = parseInt(productsPrice);
+      priceSum += (productsPrice * sofa.quantity);
+      totalPrice.innerText = priceSum;
+      console.log(priceSum + ' € prix total');
     }
   }
 };
@@ -163,46 +152,44 @@ for (let i = 0; i < quantityModify.length; i++) {
         if ((obj.id == objectInLocalStorage[i].id, obj.color == objectInLocalStorage[i].color)) {
           obj.quantity = parseInt(productQuantity);
         }
-
       });
-
     }
     console.log(productQuantity + ` nouvelle quantité du prod sélectionné`);
     localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
     // mise à jour des totaux Prix et Quantité
     totalPriceInCart();
     totalQuantityInCart();
-
   });
 }
 //-----------------------------------------------------------------
 // function de suppression d'un produit
-const deleteItem = document.querySelectorAll('.deleteItem');
-deleteItem.forEach((item) => {
-  const itemTarget = item.closest("article");
-  const itemId = itemTarget.dataset.id;
-  const articleTarget = itemTarget;
-  const itemColor = itemTarget.dataset.color;
-  // écoute du clik sur le bouton cible
-  item.addEventListener("click", (event) => {
-    event.preventDefault();
-    objectInLocalStorage.map((product) => {
-      if (product.id == itemId && product.color == itemColor) {
-        // récupération de l'ID du produit cible
-        let index = objectInLocalStorage.indexOf(product); // récupération de l'index du produit cible
-        objectInLocalStorage.splice(index, 1);
-        articleTarget.remove()
-        localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
-        //Alerte produit supprimé et refresh
-        alert("Ce produit a bien été supprimé du panier");
-      }
-    })
-    totalQuantityInCart();
-    totalPriceInCart();
-
+function deleteArticle() {
+  const deleteItem = document.querySelectorAll('.deleteItem');
+  deleteItem.forEach((item) => {
+    const itemTarget = item.closest("article");
+    const itemId = itemTarget.dataset.id;
+    const articleTarget = itemTarget;
+    const itemColor = itemTarget.dataset.color;
+    // écoute du clik sur le bouton cible
+    item.addEventListener("click", (event) => {
+      event.preventDefault();
+      objectInLocalStorage.map((product) => {
+        if (product.id == itemId && product.color == itemColor) {
+          // récupération de l'ID du produit cible
+          let index = objectInLocalStorage.indexOf(product); // récupération de l'index du produit cible
+          objectInLocalStorage.splice(index, 1);
+          articleTarget.remove()
+          localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
+          //Alerte produit supprimé
+          alert("Ce produit a bien été supprimé du panier");
+        };
+      });
+      totalQuantityInCart();
+      totalPriceInCart();
+    });
   });
-});
-//---------------mise à jour qté de la commande ----------- //
+};
+deleteArticle();
 
 // ----------------------------------------------------------------------
 //-----------------------Le formulaire -----------------------//
@@ -307,8 +294,6 @@ function postForm() {
         quantity: product.quantity,
       };
       commandDetails.push(addCmd);
-
-
     });
 
     const commandToLocalStorage = {
@@ -335,19 +320,6 @@ function postForm() {
           document.location.href = 'confirmation.html?id=' + data.orderId;
         }
       });
-
-
   });
 }
 postForm();
-
-
-
-// // Récupération de produit dans l'API via son id 
-// async function getProduct(id) {
-//   return fetch("http://localhost:3000/api/products/" + id)
-//     .then(response => response.json())
-//     .catch(error => alert("Erreur : " + error));
-// }
-// //-----------------------------------------------------------------
-// Fonction d'affichage du prix total du panier
