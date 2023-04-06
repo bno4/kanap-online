@@ -2,7 +2,7 @@
 let objectInLocalStorage = JSON.parse(localStorage.getItem("cartProduct"));
 console.log(objectInLocalStorage);
 
-// function autonome d'annonce de panier vide,  avec effacement du formulaire
+// function autonome d'annonce de panier vide, avec effacement du formulaire
 function paniervide() {
   if (objectInLocalStorage == 0 || objectInLocalStorage === null) {
     const emptySection = document.querySelector(".cart");
