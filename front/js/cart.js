@@ -126,7 +126,7 @@ fetch('http://localhost:3000/api/products')
         let totalPrice = document.getElementById('totalPrice');
         function totalPriceInCart() {
           let priceSum = 0;
-          if (objectInLocalStorage == null || objectInLocalStorage == 0) {
+          if (objectInLocalStorage === null || objectInLocalStorage == 0) {
             // totalPrice.innerText = "0";
 
           } else {
@@ -155,7 +155,7 @@ fetch('http://localhost:3000/api/products')
               location.reload();
               productQuantity = `${objectInLocalStorage[i].quantity}`;
             } else {
-              objectInLocalStorage.map((obj) => {
+              objectInLocalStorage.forEach((obj) => {
                 if ((obj.id == objectInLocalStorage[i].id, obj.color == objectInLocalStorage[i].color)) {
                   obj.quantity = parseInt(productQuantity);
                 }
@@ -196,7 +196,7 @@ fetch('http://localhost:3000/api/products')
           });
         });
 
-      })
+      });
     };
   });
 
@@ -229,6 +229,17 @@ buttonSubmit.addEventListener("click", (event) => {
 
   // Vérification des champs prénom, nom, adresse, ville et email
   // !!! checkINput cibléer le "p"
+  // function checkInput(input, regEx, msgError, baliseError) {
+
+  //   if (regEx.test(input)) {
+  //     baliseError.innerText = "";
+  //     return true;
+  //   } else {
+  //     baliseError.innerText = "Format incorrect, merci de saisir uniquement des lettres";
+  //   };
+  // };
+  // // Aller chercher le p qui suit
+
   function checkFirstname() {
     const firstNameOK = contact.firstName;
     if (regExFullNameCity.test(firstNameOK)) {
@@ -275,8 +286,15 @@ buttonSubmit.addEventListener("click", (event) => {
     };
   };
   // function de validation de l'ensemble du formulaire
-
-  if (objectInLocalStorage.length >= 1 && checkFirstname() && checkLastName() && checkAddress() && checkCity() && checkEmail()) {
+  // addeveventlistener(change) =>
+  // checkInput(firstname.value, regExFullNameCity, "Format incorrect, merci de saisir uniquement des lettres", firstNameErrorMsg)
+  // checkInput(lastname.value, regExFullNameCity, "Format incorrect, merci de saisir uniquement des lettres", firstNameErrorMsg)
+  // checkInput(address.value, regExFullNameCity, "Format incorrect, merci de saisir uniquement des lettres", firstNameErrorMsg)
+  if (objectInLocalStorage.length >= 1 && checkFirstname()
+    && checkLastName()
+    && checkAddress()
+    && checkCity()
+    && checkEmail()) {
     alert("commande confirmée !")
     // localStorage.setItem("contact", JSON.stringify(contact))
     PostServer();
@@ -293,6 +311,7 @@ buttonSubmit.addEventListener("click", (event) => {
       products.push(product.id)
 
       let addCmd = {
+        id: product.id,
         color: product.color,
         quantity: product.quantity,
       };
@@ -304,6 +323,7 @@ buttonSubmit.addEventListener("click", (event) => {
       commandDetails,
       contact,
     };
+    // console.log(commandToLocalStorage.commandDetails)
     console.log("RÉCAP DE LA COMMANDE ENVOYÉE");
     console.table(commandToLocalStorage);
 
@@ -320,7 +340,7 @@ buttonSubmit.addEventListener("click", (event) => {
     fetch("http://localhost:3000/api/products/order", opts)
       .then(response => response.json())
       .then(data => {
-        localStorage.setItem('orderId', data.orderId);
+
         document.location.href = 'confirmation.html?id=' + data.orderId;
       });
   };
