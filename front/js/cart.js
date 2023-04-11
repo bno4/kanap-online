@@ -197,101 +197,90 @@ fetch('http://localhost:3000/api/products')
       });
     };
   });
-//------------------  Le formulaire  -----------------------//
 
+//------------------  Le formulaire  -----------------------//
+// sélection du formulaire
+let form = document.querySelector(".cart__order__form");
 // sélection du bouton "commander"
 const buttonSubmit = document.getElementById('order');
 // sélection des paragraphes messages d'erreur
-const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
-const lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
-const addressErrorMsg = document.getElementById("addressErrorMsg");
-const cityErrorMsg = document.getElementById("cityErrorMsg");
-const emailErrorMsg = document.getElementById("emailErrorMsg");
+// const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
+// const lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
+// const addressErrorMsg = document.getElementById("addressErrorMsg");
+// const cityErrorMsg = document.getElementById("cityErrorMsg");
+// const emailErrorMsg = document.getElementById("emailErrorMsg");
+
+// sélection des inputs
+let inputFirstName = document.getElementById("firstName");
+let inputLastName = document.getElementById("lastName");
+let inputAddress = document.getElementById("address");
+let inputCity = document.getElementById("city");
+let inputEmail = document.getElementById("email");
+// Création de l'objet contenat les messages d'erreurs
+let errorMsgs = {
+  firstNameErrorMsg: "Veuillez entrer votre prenom en lettres",
+  lastNameErrorMsg: "Veuillez entrer votre nom en lettres",
+  addressErrorMsg: "Veuillez entrer votre adresse valide (ex: 3, rue de la mer)",
+  cityErrorMsg: "Veuillez entrer votre ville (ex: 06000 Nice)",
+  emailErrorMsg: "Veuillez entrer une adresse email valide (ex: votremail@gmail.com)",
+};
 
 // création des RegEx
-const regExEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-const regExFullNameCity = /^[a-zA-ZÀ-ÿ_-]{2,60}$/;
-const regExAddress = /^[#.0-9a-zA-ZÀ-ÿ\s,-]{2,60}$/;
+let regExps = {
+  firstNameRegExp: /^[a-zA-ZÀ-ÿ_-]{2,60}$/,
+  lastNameRegExp: /^[a-zA-ZÀ-ÿ_-]{2,60}$/,
+  addressRegExp: /^[#.0-9a-zA-ZÀ-ÿ\s,-]{2,60}$/,
+  cityRegExp: /^[a-zA-ZÀ-ÿ_-]{2,60}$/,
+  emailRegExp: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+};
 
+// Crée un objet à remplir à partir des données saisies et validées
+let contact = {
+  firstName: document.getElementById("firstName").value,
+  lastName: document.getElementById("lastName").value,
+  address: document.getElementById("address").value,
+  city: document.getElementById("city").value,
+  email: document.getElementById("email").value,
+};
+console.log(contact);
+
+
+// Vérification des champs prénom, nom, adresse, ville et email
+// !!! checkINput cibléer le "p"
+function checkInput(input, errorMsg, contactProp) {
+  let inputErrorMsgElt = document.getElementById(input.id + "ErrorMsg");
+  errorMsg = input.id + "ErrorMsg";
+  let inputRegExp = regExps[input.id + "RegExp"];
+  let inputTest = inputRegExp.test(input.value); // Teste da valeur du champ par rapport à la RegExp correspondante
+  contactProp = input.id;
+  if (inputTest) { // si le test renvoie vrai, envoie la valeur saisie dans le formulaire à {contact}
+    contact[`${contactProp}`] = input.value;
+    inputErrorMsgElt.textContent = "";
+  } else { // sinon, ajoute le message d'erreur
+    inputErrorMsgElt.textContent = errorMsgs[errorMsg];
+    contact[`${contactProp}`] = "";
+  }
+}
+for (let input of form) { // Pour chaque input du formulaire,
+  input.addEventListener("input", (e) => { // Ajoute un ecouteur d'evenement au changement de la valeur 
+    checkInput(input, errorMsgs.errorMsg, input.id); // Lance la fonction de verification de données saisies dans le formulaire de contact 
+    console.log(contact);
+  });
+};
+
+
+// function de validation de l'ensemble du formulaire
+// inputFirstName.addeveventlistener("input", (e) => {
+//   e.preventDefault();
+//   checkInput(firstname.value, regExFirstName, firstNameErrorMsg, firstNameErrorMsg)
+// })
+// checkInput(lastname.value, regExFullNameCity, "Format incorrect, merci de saisir uniquement des lettres", firstNameErrorMsg)
+// checkInput(address.value, regExFullNameCity, "Format incorrect, merci de saisir uniquement des lettres", firstNameErrorMsg)
 // Au clic, récupération des données du formulaire sous format objet
 buttonSubmit.addEventListener("click", (event) => {
   event.preventDefault();
-  let contact = {
-    firstName: document.querySelector("#firstName").value,
-    lastName: document.querySelector("#lastName").value,
-    address: document.querySelector("#address").value,
-    city: document.querySelector("#city").value,
-    email: document.querySelector("#email").value
-  };
-
-  // Vérification des champs prénom, nom, adresse, ville et email
-  // !!! checkINput cibléer le "p"
-  // function checkInput(input, regEx, msgError, baliseError) {
-
-  //   if (regEx.test(input)) {
-  //     baliseError.innerText = "";
-  //     return true;
-  //   } else {
-  //     baliseError.innerText = "Format incorrect, merci de saisir uniquement des lettres";
-  //   };
-  // };
-  // // Aller chercher le p qui suit
-
-  function checkFirstname() {
-    const firstNameOK = contact.firstName;
-    if (regExFullNameCity.test(firstNameOK)) {
-      firstNameErrorMsg.innerText = "";
-      return true;
-    } else {
-      firstNameErrorMsg.innerText = "Format incorrect, merci de saisir uniquement des lettres";
-    };
-  };
-
-  function checkLastName() {
-    const lastNameOK = contact.lastName;
-    if (regExFullNameCity.test(lastNameOK)) {
-      return true;
-    } else {
-      lastNameErrorMsg.innerText = "Format incorrect, merci de saisir uniquement des lettres"
-    };
-  };
-
-  function checkAddress() {
-    const addressOK = contact.address;
-    if (regExAddress.test(addressOK)) {
-      return true;
-    } else {
-      addressErrorMsg.innerText = "Format incorrect, merci de saisir uniquement des caractères alphanumériques"
-    };
-  };
-
-  function checkCity() {
-    const cityOK = contact.city;
-    if (regExFullNameCity.test(cityOK)) {
-      return true;
-    } else {
-      cityErrorMsg.innerText = "Format incorrect, merci de saisir uniquement des lettres";
-    };
-  };
-
-  function checkEmail() {
-    const emailOK = contact.email;
-    if (regExEmail.test(emailOK)) {
-      return true;
-    } else {
-      emailErrorMsg.innerText = "Format incorrect, merci de saisir une adresse email valide";
-    };
-  };
-  // function de validation de l'ensemble du formulaire
-  // addeveventlistener(change) =>
-  // checkInput(firstname.value, regExFullNameCity, "Format incorrect, merci de saisir uniquement des lettres", firstNameErrorMsg)
-  // checkInput(lastname.value, regExFullNameCity, "Format incorrect, merci de saisir uniquement des lettres", firstNameErrorMsg)
-  // checkInput(address.value, regExFullNameCity, "Format incorrect, merci de saisir uniquement des lettres", firstNameErrorMsg)
-  if (objectInLocalStorage.length >= 1 && checkFirstname()
-    && checkLastName()
-    && checkAddress()
-    && checkCity()
-    && checkEmail()) {
+  console.log(objectInLocalStorage.length);
+  if (contact.firstName && contact.lastName && contact.address && contact.city && contact.email && objectInLocalStorage.length >= 0) {
     alert("commande confirmée !")
     // localStorage.setItem("contact", JSON.stringify(contact))
     PostServer();
@@ -342,3 +331,50 @@ buttonSubmit.addEventListener("click", (event) => {
       });
   };
 });
+
+// ANCIEN CODE FORMULAIRE
+// function checkFirstname() {
+//   const firstNameOK = contact.firstName;
+//   if (regExFullNameCity.test(firstNameOK)) {
+//     firstNameErrorMsg.innerText = "";
+//     return true;
+//   } else {
+//     firstNameErrorMsg.innerText = "Format incorrect, merci de saisir uniquement des lettres";
+//   };
+// };
+
+// function checkLastName() {
+//   const lastNameOK = contact.lastName;
+//   if (regExFullNameCity.test(lastNameOK)) {
+//     return true;
+//   } else {
+//     lastNameErrorMsg.innerText = "Format incorrect, merci de saisir uniquement des lettres"
+//   };
+// };
+
+// function checkAddress() {
+//   const addressOK = contact.address;
+//   if (regExAddress.test(addressOK)) {
+//     return true;
+//   } else {
+//     addressErrorMsg.innerText = "Format incorrect, merci de saisir uniquement des caractères alphanumériques"
+//   };
+// };
+
+// function checkCity() {
+//   const cityOK = contact.city;
+//   if (regExFullNameCity.test(cityOK)) {
+//     return true;
+//   } else {
+//     cityErrorMsg.innerText = "Format incorrect, merci de saisir uniquement des lettres";
+//   };
+// };
+
+// function checkEmail() {
+//   const emailOK = contact.email;
+//   if (regExEmail.test(emailOK)) {
+//     return true;
+//   } else {
+//     emailErrorMsg.innerText = "Format incorrect, merci de saisir une adresse email valide";
+//   };
+// };
