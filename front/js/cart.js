@@ -54,18 +54,8 @@ fetch('http://localhost:3000/api/products')
         titleItem.innerText = product.name;
         const colorItem = document.createElement('p');
         colorItem.innerText = product.color;
-
-        // récupération du prix du produit depuis l'API
-        let object = "";
-        fetch("http://localhost:3000/api/products/" + product.id)
-          .then(res => res.json())
-          .then(function (showApi) {
-            object = showApi;
-            const priceItem = document.createElement('p');
-            priceItem.innerText = `${productApi.price} €`;
-            divContentDescription.appendChild(priceItem);
-          })
-          .catch(error => alert("Erreur : " + error));
+        const priceItem = document.createElement('p');
+        priceItem.innerText = `${productApi.price} €`;
 
         // création du bloc de modification de la quantité des canapés
         const divContentSettings = document.createElement("div");
@@ -92,7 +82,7 @@ fetch('http://localhost:3000/api/products')
         divImgCart.appendChild(imgCart);
         articleCart.appendChild(divContent);
         divContent.appendChild(divContentDescription);
-        divContentDescription.append(titleItem, colorItem);
+        divContentDescription.append(titleItem, priceItem, colorItem);
         divContent.appendChild(divContentSettings);
         divContentSettings.appendChild(divContentQty);
         divContentQty.append(quantityItem, setQuantity);
@@ -131,8 +121,9 @@ fetch('http://localhost:3000/api/products')
 
           } else {
             for (let sofa of objectInLocalStorage) {
+              const produitApi = products.find(prod => prod._id === sofa.id);
 
-              let productsPrice = productApi.price;
+              let productsPrice = produitApi.price;
               // let priceItems = parseInt(productsPrice);
               priceSum += (productsPrice * sofa.quantity);
               totalPrice.innerText = priceSum;
@@ -144,30 +135,35 @@ fetch('http://localhost:3000/api/products')
 
         //-----------------------------------------------------------------
         // function de modification de quantité
-        let quantityModify = document.querySelectorAll(".itemQuantity")
-        for (let i = 0; i < quantityModify.length; i++) {
-          quantityModify[i].addEventListener("change", (event) => {
-            event.preventDefault();
-            let productQuantity = event.target.value;
-            if (productQuantity == 0 || productQuantity >= 100) {
-              console.error("La quantité doit être comprise entre 1 et 100")
-              alert("La quantité doit être comprise entre 1 et 100")
-              location.reload();
-              productQuantity = `${objectInLocalStorage[i].quantity}`;
-            } else {
-              objectInLocalStorage.forEach((obj) => {
-                if ((obj.id == objectInLocalStorage[i].id, obj.color == objectInLocalStorage[i].color)) {
-                  obj.quantity = parseInt(productQuantity);
-                }
-              });
-            }
-            console.log(productQuantity + ` nouvelle quantité du prod sélectionné`);
-            localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
-            // mise à jour des totaux Prix et Quantité
-            totalPriceInCart();
-            totalQuantityInCart();
-          });
-        }
+        function modify() {
+          let quantityModify = document.querySelectorAll(".itemQuantity")
+          for (let i = 0; i < quantityModify.length; i++) {
+            quantityModify[i].addEventListener("change", (event) => {
+              event.preventDefault();
+              let productQuantity = event.target.value;
+              if (productQuantity == 0 || productQuantity >= 100) {
+                console.error("La quantité doit être comprise entre 1 et 100")
+                alert("La quantité doit être comprise entre 1 et 100")
+                location.reload();
+                productQuantity = `${objectInLocalStorage[i].quantity}`;
+              } else {
+                objectInLocalStorage.forEach((obj) => {
+                  if ((obj.id == objectInLocalStorage[i].id, obj.color == objectInLocalStorage[i].color)) {
+                    obj.quantity = parseInt(productQuantity);
+                  }
+                  console.log(objectInLocalStorage[i]);
+                });
+              }
+              console.log(productQuantity + ` nouvelle quantité du prod sélectionné`);
+              localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
+              // mise à jour des totaux Prix et Quantité
+              totalPriceInCart();
+              totalQuantityInCart();
+            });
+          };
+        };
+        modify();
+
         //-----------------------------------------------------------------
         // function de suppression d'un produit
 
@@ -180,17 +176,19 @@ fetch('http://localhost:3000/api/products')
           // écoute du clik sur le bouton cible
           item.addEventListener("click", (event) => {
             event.preventDefault();
-            objectInLocalStorage.map((product) => {
-              if (product.id == itemId && product.color == itemColor) {
+            objectInLocalStorage.map((pouf) => {
+              if (pouf.id == itemId && pouf.color == itemColor) {
                 // récupération de l'ID du produit cible
-                let index = objectInLocalStorage.indexOf(product); // récupération de l'index du produit cible
+                let index = objectInLocalStorage.indexOf(pouf); // récupération de l'index du produit cible
                 objectInLocalStorage.splice(index, 1);
-                articleTarget.remove()
-                localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
+                articleTarget.remove();
+
                 //Alerte produit supprimé
                 alert("Ce produit a bien été supprimé du panier");
               };
             });
+            localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
+            modify();
             totalQuantityInCart();
             totalPriceInCart();
           });
@@ -199,7 +197,6 @@ fetch('http://localhost:3000/api/products')
       });
     };
   });
-
 //------------------  Le formulaire  -----------------------//
 
 // sélection du bouton "commander"
