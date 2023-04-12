@@ -11,7 +11,7 @@ function paniervide() {
     emptySection.style.display = "none";
   }
 };
-// GET PRODUCT DATAS FROM API BY ID TO GET ITS PRICE
+// Fetch de l'API pour récupérer le prix du produit
 fetch('http://localhost:3000/api/products')
   .then(res => {
     if (res.ok) {
@@ -19,14 +19,15 @@ fetch('http://localhost:3000/api/products')
     }
   })
   .then(products => {
-    // sélection de la section où est affiché l'html
+
     if (objectInLocalStorage === null || objectInLocalStorage == 0) {
       paniervide();
       console.log("panier vide");
 
     } else {
+      // sélection de la section où est affiché l'html
       const cartState = document.querySelector('#cart__items');
-      //Si un produit est dans le panier, boucle "map" pour pacourir le localstorage
+      //Si un produit est dans le panier, boucle "map" pour pacourir le localstorage et afficher les produits précédemment sélectionnés
       objectInLocalStorage.map(product => {
         const productApi = products.find(prod => prod._id === product.id);
 
@@ -97,7 +98,6 @@ fetch('http://localhost:3000/api/products')
           if (objectInLocalStorage == 0 || objectInLocalStorage === null) {
             paniervide();
             console.log('panier vide')
-            // totalQuantity.innerText = "0";
 
           } else {
             for (let quantityProductsInCart of objectInLocalStorage) {
@@ -178,13 +178,13 @@ fetch('http://localhost:3000/api/products')
             event.preventDefault();
             objectInLocalStorage.map((pouf) => {
               if (pouf.id == itemId && pouf.color == itemColor) {
-                // récupération de l'ID du produit cible
-                let index = objectInLocalStorage.indexOf(pouf); // récupération de l'index du produit cible
+                // récupération de l'index du produit cible
+                let index = objectInLocalStorage.indexOf(pouf);
                 objectInLocalStorage.splice(index, 1);
                 articleTarget.remove();
 
                 //Alerte produit supprimé
-                alert("Ce produit a bien été supprimé du panier");
+                alert("Ce produit a été retiré du panier");
               };
             });
             localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
@@ -203,34 +203,22 @@ fetch('http://localhost:3000/api/products')
 let form = document.querySelector(".cart__order__form");
 // sélection du bouton "commander"
 const buttonSubmit = document.getElementById('order');
-// sélection des paragraphes messages d'erreur
-// const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
-// const lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
-// const addressErrorMsg = document.getElementById("addressErrorMsg");
-// const cityErrorMsg = document.getElementById("cityErrorMsg");
-// const emailErrorMsg = document.getElementById("emailErrorMsg");
 
-// sélection des inputs
-let inputFirstName = document.getElementById("firstName");
-let inputLastName = document.getElementById("lastName");
-let inputAddress = document.getElementById("address");
-let inputCity = document.getElementById("city");
-let inputEmail = document.getElementById("email");
 // Création de l'objet contenat les messages d'erreurs
 let errorMsgs = {
-  firstNameErrorMsg: "Veuillez entrer votre prenom en lettres",
-  lastNameErrorMsg: "Veuillez entrer votre nom en lettres",
-  addressErrorMsg: "Veuillez entrer votre adresse valide (ex: 3, rue de la mer)",
-  cityErrorMsg: "Veuillez entrer votre ville (ex: 06000 Nice)",
-  emailErrorMsg: "Veuillez entrer une adresse email valide (ex: votremail@gmail.com)",
+  firstNameErrorMsg: "Merci de ne saisir que des lettres et au moins 2 caractères",
+  lastNameErrorMsg: "Merci de ne saisir que des lettres et au moins 2 caractères",
+  addressErrorMsg: "Merci de ne saisi que des caractères alphanumériques",
+  cityErrorMsg: "Merci de ne saisir que des lettres et au moins 2 caractères",
+  emailErrorMsg: "Merci de saisir une adresse e-mail valide",
 };
 
 // création des RegEx
 let regExps = {
-  firstNameRegExp: /^[a-zA-ZÀ-ÿ_-]{2,60}$/,
-  lastNameRegExp: /^[a-zA-ZÀ-ÿ_-]{2,60}$/,
+  firstNameRegExp: /^[a-zA-ZÀ-ÿ _-]{2,60}$/,
+  lastNameRegExp: /^[a-zA-ZÀ-ÿ _-]{1,60}$/,
   addressRegExp: /^[#.0-9a-zA-ZÀ-ÿ\s,-]{2,60}$/,
-  cityRegExp: /^[a-zA-ZÀ-ÿ_-]{2,60}$/,
+  cityRegExp: /^[a-zA-ZÀ-ÿ _-]{2,60}$/,
   emailRegExp: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
 };
 
@@ -242,44 +230,34 @@ let contact = {
   city: document.getElementById("city").value,
   email: document.getElementById("email").value,
 };
-console.log(contact);
-
 
 // Vérification des champs prénom, nom, adresse, ville et email
-// !!! checkINput cibléer le "p"
-function checkInput(input, errorMsg, contactProp) {
+function checkInput(input, errorMsg, inputValue) {
   let inputErrorMsgElt = document.getElementById(input.id + "ErrorMsg");
   errorMsg = input.id + "ErrorMsg";
   let inputRegExp = regExps[input.id + "RegExp"];
   let inputTest = inputRegExp.test(input.value); // Teste da valeur du champ par rapport à la RegExp correspondante
-  contactProp = input.id;
+  inputValue = input.id;
   if (inputTest) { // si le test renvoie vrai, envoie la valeur saisie dans le formulaire à {contact}
-    contact[`${contactProp}`] = input.value;
+    contact[`${inputValue}`] = input.value;
     inputErrorMsgElt.textContent = "";
   } else { // sinon, ajoute le message d'erreur
     inputErrorMsgElt.textContent = errorMsgs[errorMsg];
-    contact[`${contactProp}`] = "";
+    contact[`${inputValue}`] = "";
   }
 }
 for (let input of form) { // Pour chaque input du formulaire,
-  input.addEventListener("input", (e) => { // Ajoute un ecouteur d'evenement au changement de la valeur 
+  input.addEventListener("input", (e) => {
+    e.preventDefault(); // Ajoute un ecouteur d'evenement au changement de la valeur 
     checkInput(input, errorMsgs.errorMsg, input.id); // Lance la fonction de verification de données saisies dans le formulaire de contact 
     console.log(contact);
   });
 };
 
-
-// function de validation de l'ensemble du formulaire
-// inputFirstName.addeveventlistener("input", (e) => {
-//   e.preventDefault();
-//   checkInput(firstname.value, regExFirstName, firstNameErrorMsg, firstNameErrorMsg)
-// })
-// checkInput(lastname.value, regExFullNameCity, "Format incorrect, merci de saisir uniquement des lettres", firstNameErrorMsg)
-// checkInput(address.value, regExFullNameCity, "Format incorrect, merci de saisir uniquement des lettres", firstNameErrorMsg)
-// Au clic, récupération des données du formulaire sous format objet
+/**  Au clic sur le bouton "commander" : vérification du formulaire. 
+Si OK appel de la fonction POST server pour récupérer l'orderID */
 buttonSubmit.addEventListener("click", (event) => {
   event.preventDefault();
-  console.log(objectInLocalStorage.length);
   if (contact.firstName && contact.lastName && contact.address && contact.city && contact.email && objectInLocalStorage.length >= 0) {
     alert("commande confirmée !")
     // localStorage.setItem("contact", JSON.stringify(contact))
@@ -288,11 +266,13 @@ buttonSubmit.addEventListener("click", (event) => {
   else {
     alert("Un champ est vide ou mal renseigné")
   };
-
+  // Création de la function POST pour récpérer l'orderID
   function PostServer() {
+
     // regroupement des ID + couleur + quantité du panier sélectionné et données du formulaire dans un objet
     let products = [];
-    let commandDetails = []; // 2e tableau avec les détails car le [] products n'accepte que l'id. Renvoie par le serveur d'une erreur 500
+    // 2e tableau avec les détails car le back n'accepte QUE l'id dans l'array Products (Renvoie par le serveur d'une erreur 500)
+    let commandDetails = [];
     objectInLocalStorage.map((product) => {
       products.push(product.id)
 
@@ -303,15 +283,15 @@ buttonSubmit.addEventListener("click", (event) => {
       };
       commandDetails.push(addCmd);
     });
-    // Regroupement des infos dans un object global
+    // Regroupement des infos dans un objet global regroupant l'ID Produit, le détail de la commande (couleurs et quantités choises)
     const commandToLocalStorage = {
       products,
       commandDetails,
       contact,
     };
-    // console.log(commandToLocalStorage.commandDetails)
-    console.log("RÉCAP DE LA COMMANDE ENVOYÉE");
-    console.table(commandToLocalStorage);
+    console.log("RÉCAP DE LA COMMANDE");
+    console.table(commandDetails);
+    console.table(contact);
 
     // Envoi de l'objet formulaire et panier dans le serveur
 
@@ -322,59 +302,27 @@ buttonSubmit.addEventListener("click", (event) => {
         'Content-Type': 'application/json',
       }
     };
-
+    // récupération du numéro de commande et redirection vers la page confirmation
     fetch("http://localhost:3000/api/products/order", opts)
       .then(response => response.json())
       .then(data => {
-
         document.location.href = 'confirmation.html?id=' + data.orderId;
       });
   };
 });
 
-// ANCIEN CODE FORMULAIRE
-// function checkFirstname() {
-//   const firstNameOK = contact.firstName;
-//   if (regExFullNameCity.test(firstNameOK)) {
-//     firstNameErrorMsg.innerText = "";
-//     return true;
-//   } else {
-//     firstNameErrorMsg.innerText = "Format incorrect, merci de saisir uniquement des lettres";
-//   };
-// };
 
-// function checkLastName() {
-//   const lastNameOK = contact.lastName;
-//   if (regExFullNameCity.test(lastNameOK)) {
-//     return true;
-//   } else {
-//     lastNameErrorMsg.innerText = "Format incorrect, merci de saisir uniquement des lettres"
-//   };
-// };
 
-// function checkAddress() {
-//   const addressOK = contact.address;
-//   if (regExAddress.test(addressOK)) {
-//     return true;
-//   } else {
-//     addressErrorMsg.innerText = "Format incorrect, merci de saisir uniquement des caractères alphanumériques"
-//   };
-// };
 
-// function checkCity() {
-//   const cityOK = contact.city;
-//   if (regExFullNameCity.test(cityOK)) {
-//     return true;
-//   } else {
-//     cityErrorMsg.innerText = "Format incorrect, merci de saisir uniquement des lettres";
-//   };
-// };
 
-// function checkEmail() {
-//   const emailOK = contact.email;
-//   if (regExEmail.test(emailOK)) {
-//     return true;
-//   } else {
-//     emailErrorMsg.innerText = "Format incorrect, merci de saisir une adresse email valide";
-//   };
-// };
+
+
+
+
+//** ANCIENNEs LIGNEs DE CODE */
+// sélection des inputs
+// let inputFirstName = document.getElementById("firstName");
+// let inputLastName = document.getElementById("lastName");
+// let inputAddress = document.getElementById("address");
+// let inputCity = document.getElementById("city");
+// let inputEmail = document.getElementById("email");
