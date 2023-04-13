@@ -77,7 +77,7 @@ fetch('http://localhost:3000/api/products')
         deleteButton.className = 'deleteItem'
         deleteButton.innerText = "Supprimer";
 
-        // architecture HTML
+        // architecture du bloc HTML
         cartState.appendChild(articleCart);
         articleCart.appendChild(divImgCart);
         divImgCart.appendChild(imgCart);
@@ -164,6 +164,7 @@ fetch('http://localhost:3000/api/products')
         };
         modify();
 
+
         //-----------------------------------------------------------------
         // function de suppression d'un produit
 
@@ -176,10 +177,10 @@ fetch('http://localhost:3000/api/products')
           // écoute du clik sur le bouton cible
           item.addEventListener("click", (event) => {
             event.preventDefault();
-            objectInLocalStorage.map((pouf) => {
-              if (pouf.id == itemId && pouf.color == itemColor) {
+            objectInLocalStorage.map((sofa) => {
+              if (sofa.id == itemId && sofa.color == itemColor) {
                 // récupération de l'index du produit cible
-                let index = objectInLocalStorage.indexOf(pouf);
+                let index = objectInLocalStorage.indexOf(sofa);
                 objectInLocalStorage.splice(index, 1);
                 articleTarget.remove();
 
@@ -193,12 +194,12 @@ fetch('http://localhost:3000/api/products')
             totalPriceInCart();
           });
         });
-
+        // FIN de la function de suprresion d'un produit
       });
     };
   });
 
-//------------------  Le formulaire  -----------------------//
+/**------------------  LE FORMULAIRE  -----------------------*/
 // sélection du formulaire
 let form = document.querySelector(".cart__order__form");
 // sélection du bouton "commander"
