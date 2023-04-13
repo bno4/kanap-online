@@ -3,7 +3,7 @@ let objectInLocalStorage = JSON.parse(localStorage.getItem("cartProduct"));
 console.log(objectInLocalStorage);
 
 // function autonome d'annonce de panier vide, avec effacement du formulaire
-function paniervide() {
+function showEmptyCart() {
   if (objectInLocalStorage == 0 || objectInLocalStorage === null) {
     const emptySection = document.querySelector(".cart");
     const emptyCart = document.querySelector("h1");
@@ -11,6 +11,7 @@ function paniervide() {
     emptySection.style.display = "none";
   }
 };
+
 // Fetch de l'API pour récupérer le prix du produit
 fetch('http://localhost:3000/api/products')
   .then(res => {
@@ -21,7 +22,7 @@ fetch('http://localhost:3000/api/products')
   .then(products => {
 
     if (objectInLocalStorage === null || objectInLocalStorage == 0) {
-      paniervide();
+      showEmptyCart();
       console.log("panier vide");
 
     } else {
@@ -31,7 +32,7 @@ fetch('http://localhost:3000/api/products')
       objectInLocalStorage.map(product => {
         const productApi = products.find(prod => prod._id === product.id);
 
-        console.log(objectInLocalStorage.length + ` éléments dans le panier`);
+        console.log(objectInLocalStorage.length + ` canapés différents dans le panier`);
 
         // création de la balise article et récupération des data du localstorage
         const articleCart = document.createElement("article");
@@ -91,51 +92,39 @@ fetch('http://localhost:3000/api/products')
         deleteDiv.appendChild(deleteButton);
 
         //-------------------------------------------------------
-        // Fonction d'affichage de la quantité totale de produits
-        function totalQuantityInCart() {
+        // Fonction d'affichage des totaux quantité et prix du panier
+        function TotalQuantityPrice() {
           let totalQuantity = document.getElementById('totalQuantity')
           let quantitySum = 0;
+          let totalPrice = document.getElementById('totalPrice');
+          let priceSum = 0;
+
           if (objectInLocalStorage == 0 || objectInLocalStorage === null) {
-            paniervide();
+            showEmptyCart();
             console.log('panier vide')
 
           } else {
-            for (let quantityProductsInCart of objectInLocalStorage) {
-              let quantityProducts = quantityProductsInCart.quantity;
+            for (let sofa of objectInLocalStorage) {
+              // rappel du prix du produit depuis l'API dans cette boucle for
+              const prodApi = products.find(prod => prod._id === sofa.id);
+              // calcul de la quantité totale
+              let quantityProducts = sofa.quantity;
               let quantityTotal = parseInt(quantityProducts);
               quantitySum += quantityTotal;
               totalQuantity.innerText = quantitySum;
-            }
-          }
-          console.log(quantitySum + ` = nbre de produits dans le panier`);
-        };
-        totalQuantityInCart();
-
-        // --------------------------------------------
-        // Fonction d'affichage du Prix total du panier
-        let totalPrice = document.getElementById('totalPrice');
-        function totalPriceInCart() {
-          let priceSum = 0;
-          if (objectInLocalStorage === null || objectInLocalStorage == 0) {
-            // totalPrice.innerText = "0";
-
-          } else {
-            for (let sofa of objectInLocalStorage) {
-              const produitApi = products.find(prod => prod._id === sofa.id);
-
-              let productsPrice = produitApi.price;
-              // let priceItems = parseInt(productsPrice);
-              priceSum += (productsPrice * sofa.quantity);
+              // calcul du prix total
+              priceSum += (prodApi.price * sofa.quantity);
               totalPrice.innerText = priceSum;
-              console.log(priceSum + ' € prix total');
-            }
-          }
+            };
+          };
+          console.log(quantitySum + ` unités au total dans le panier`);
+          console.log(priceSum + ' € prix total dans le panier');
         };
-        totalPriceInCart();
+        TotalQuantityPrice();
 
         //-----------------------------------------------------------------
         // function de modification de quantité
-        function modify() {
+        function quantityChange() {
           let quantityModify = document.querySelectorAll(".itemQuantity")
           for (let i = 0; i < quantityModify.length; i++) {
             quantityModify[i].addEventListener("change", (event) => {
@@ -157,16 +146,14 @@ fetch('http://localhost:3000/api/products')
               console.log(productQuantity + ` nouvelle quantité du prod sélectionné`);
               localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
               // mise à jour des totaux Prix et Quantité
-              totalPriceInCart();
-              totalQuantityInCart();
+              TotalQuantityPrice();
             });
           };
         };
-        modify();
-
+        quantityChange();
 
         //-----------------------------------------------------------------
-        // function de suppression d'un produit
+        // Fonction de suppression d'un produit
 
         const deleteItem = document.querySelectorAll('.deleteItem');
         deleteItem.forEach((item) => {
@@ -189,9 +176,8 @@ fetch('http://localhost:3000/api/products')
               };
             });
             localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
-            modify();
-            totalQuantityInCart();
-            totalPriceInCart();
+            quantityChange();
+            TotalQuantityPrice();
           });
         });
         // FIN de la function de suprresion d'un produit
@@ -208,8 +194,8 @@ const buttonSubmit = document.getElementById('order');
 // Création de l'objet contenat les messages d'erreurs
 let errorMsgs = {
   firstNameErrorMsg: "Merci de ne saisir que des lettres et au moins 2 caractères",
-  lastNameErrorMsg: "Merci de ne saisir que des lettres et au moins 2 caractères",
-  addressErrorMsg: "Merci de ne saisi que des caractères alphanumériques",
+  lastNameErrorMsg: "Merci de ne saisir que des lettres et au moins 1 caractère",
+  addressErrorMsg: "Merci de ne saisir que des caractères alphanumériques et au moins 2 caractères",
   cityErrorMsg: "Merci de ne saisir que des lettres et au moins 2 caractères",
   emailErrorMsg: "Merci de saisir une adresse e-mail valide",
 };
@@ -265,7 +251,7 @@ buttonSubmit.addEventListener("click", (event) => {
     PostServer();
   }
   else {
-    alert("Un champ est vide ou mal renseigné")
+    alert("Un champ est vide ou mal renseigné, merci de renseigner tous les champs")
   };
   // Création de la function POST pour récpérer l'orderID
   function PostServer() {
@@ -327,3 +313,26 @@ buttonSubmit.addEventListener("click", (event) => {
 // let inputAddress = document.getElementById("address");
 // let inputCity = document.getElementById("city");
 // let inputEmail = document.getElementById("email");
+
+
+// SIMPLIFICATION DU CODE AVEC UNE SEULE FONCTION POUR LE CALCUL DU PRIX ET DE LA QUANTITE PANIER
+// ANCIEN CODE DE LA FUCNTION CALCUL DU PRIX CI-DESSOUS
+        // Fonction d'affichage du Prix total du panier
+        // let totalPrice = document.getElementById('totalPrice');
+        // function totalPriceInCart() {
+        //   let priceSum = 0;
+        //   if (objectInLocalStorage === null || objectInLocalStorage == 0) {
+        //     // totalPrice.innerText = "0";
+
+        //   } else {
+        //     for (let sofa of objectInLocalStorage) {
+        //       const produitApi = products.find(prod => prod._id === sofa.id);
+        //       // let productsPrice = produitApi.price;
+        //       // let priceItems = parseInt(productsPrice);
+        //       priceSum += (produitApi.price * sofa.quantity);
+        //       totalPrice.innerText = priceSum;
+        //       console.log(priceSum + ' € prix total');
+        //     }
+        //   }
+        // };
+        // totalPriceInCart();
