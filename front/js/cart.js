@@ -235,11 +235,13 @@ function checkInput(input, errorMsg, inputValue) {
     contact[`${inputValue}`] = "";
   }
 };
-
-for (let input of form) { // Pour chaque input du formulaire,
+// Boucle For pour chaque input du formulaire
+for (let input of form) {
+  // Ajoute un ecouteur d'evenement au changement de valeur 
   input.addEventListener("input", (e) => {
-    e.preventDefault(); // Ajoute un ecouteur d'evenement au changement de la valeur 
-    checkInput(input, errorMsgs.errorMsg, input.id); // Lance la fonction de verification de données saisies dans le formulaire de contact 
+    e.preventDefault();
+    // Appel de la fonction de vérification des valeurs saisies
+    checkInput(input, errorMsgs.errorMsg, input.id);
     console.log(contact);
   });
 };
@@ -248,8 +250,8 @@ for (let input of form) { // Pour chaque input du formulaire,
 Si OK appel de la fonction POST server pour récupérer l'orderID */
 buttonSubmit.addEventListener("click", (event) => {
   event.preventDefault();
-  if (contact.firstName && contact.lastName && contact.address && contact.city && contact.email && objectInLocalStorage.length >= 0) {
-    alert("commande confirmée !")
+  if (contact.firstName && contact.lastName && contact.address && contact.city && contact.email && objectInLocalStorage.length >= 1) {
+    // alert("commande confirmée !")
     // localStorage.setItem("contact", JSON.stringify(contact))
     PostServer();
   }
@@ -259,15 +261,15 @@ buttonSubmit.addEventListener("click", (event) => {
   // Création de la function POST pour récpérer l'orderID
   function PostServer() {
 
-    // regroupement des ID + couleur + quantité du panier sélectionné et données du formulaire dans un objet
+    // Regroupement des ID + couleur + quantité du panier sélectionné et données du formulaire dans un objet
     let products = [];
-    // 2e tableau avec les détails car le back n'accepte QUE l'id dans l'array Products (Renvoie par le serveur d'une erreur 500)
+    // 2e tableau avec les détails car le back n'accepte QUE l'id dans l'array Products (le serveur renvoie une erreur 500)
     let commandDetails = [];
     objectInLocalStorage.map((product) => {
       products.push(product.id)
 
       let addCmd = {
-        id: product.id,
+        idProduct: product.id,
         color: product.color,
         quantity: product.quantity,
       };
@@ -279,10 +281,6 @@ buttonSubmit.addEventListener("click", (event) => {
       commandDetails,
       contact,
     };
-    console.log("RÉCAP DE LA COMMANDE");
-    console.table(commandDetails);
-    console.table(contact);
-
     // Envoi de l'objet formulaire et panier dans le serveur
 
     const opts = {
@@ -298,8 +296,14 @@ buttonSubmit.addEventListener("click", (event) => {
       .then(data => {
         document.location.href = 'confirmation.html?id=' + data.orderId;
       });
+    console.table(commandDetails);
+    console.table(contact);
   };
 });
+
+
+
+
 
 
 
