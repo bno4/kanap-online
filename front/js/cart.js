@@ -12,7 +12,7 @@ function showEmptyCart() {
   }
 };
 
-// Fetch de l'API pour récupérer le prix du produit
+// Fetch de l'API pour récupérer le prix qui n'est pas dans le localstorage
 fetch('http://localhost:3000/api/products')
   .then(res => {
     if (res.ok) {
@@ -170,8 +170,6 @@ fetch('http://localhost:3000/api/products')
                 let index = objectInLocalStorage.indexOf(sofa);
                 objectInLocalStorage.splice(index, 1);
                 articleTarget.remove();
-
-                //Alerte produit supprimé
                 alert("Ce produit a été retiré du panier");
               };
             });
@@ -193,11 +191,11 @@ const buttonSubmit = document.getElementById('order');
 
 // Création de l'objet contenat les messages d'erreurs
 let errorMsgs = {
-  firstNameErrorMsg: "Merci de ne saisir que des lettres et au moins 2 caractères",
-  lastNameErrorMsg: "Merci de ne saisir que des lettres et au moins 1 caractère",
-  addressErrorMsg: "Merci de ne saisir que des caractères alphanumériques et au moins 2 caractères",
-  cityErrorMsg: "Merci de ne saisir que des lettres et au moins 2 caractères",
-  emailErrorMsg: "Merci de saisir une adresse e-mail valide",
+  "firstName": "Merci de ne saisir que des lettres et au moins 2 caractères",
+  "lastName": "Merci de ne saisir que des lettres et au moins 1 caractère",
+  "address": "Merci de ne saisir que des caractères alphanumériques et au moins 2 caractères",
+  "city": "Merci de ne saisir que des lettres et au moins 2 caractères",
+  "email": "Merci de saisir une adresse e-mail valide",
 };
 
 // création des RegEx
@@ -218,11 +216,11 @@ let contact = {
   email: "",
 };
 
-
 // Vérification des champs prénom, nom, adresse, ville et email
-function checkInput(input, errorMsg, inputValue) {
+function checkInput(input) {
   let inputErrorMsgElt = document.getElementById(input.id + "ErrorMsg");
-  errorMsg = input.id + "ErrorMsg";
+  // errorMsg = input.id + "ErrorMsg";
+
   let inputRegExp = regExps[input.id + "RegExp"];
   let inputTest = inputRegExp.test(input.value); // Teste da valeur du champ par rapport à la RegExp correspondante
   inputValue = input.id;
@@ -231,7 +229,7 @@ function checkInput(input, errorMsg, inputValue) {
     contact[`${inputValue}`] = input.value;
     inputErrorMsgElt.textContent = "";
   } else { // sinon, ajoute le message d'erreur
-    inputErrorMsgElt.textContent = errorMsgs[errorMsg];
+    inputErrorMsgElt.textContent = errorMsgs[input.id];
     contact[`${inputValue}`] = "";
   }
 };
@@ -241,7 +239,7 @@ for (let input of form) {
   input.addEventListener("input", (e) => {
     e.preventDefault();
     // Appel de la fonction de vérification des valeurs saisies
-    checkInput(input, errorMsgs.errorMsg, input.id);
+    checkInput(input);
     console.log(contact);
   });
 };
