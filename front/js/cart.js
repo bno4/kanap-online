@@ -105,7 +105,7 @@ fetch('http://localhost:3000/api/products')
 
           } else {
             for (let sofa of objectInLocalStorage) {
-              // rappel du prix du produit depuis l'API dans cette boucle for
+              // appel du prix du produit depuis l'API dans cette boucle for
               const prodApi = products.find(prod => prod._id === sofa.id);
               // calcul de la quantité totale
               let quantityProducts = sofa.quantity;
@@ -180,7 +180,7 @@ fetch('http://localhost:3000/api/products')
             TotalQuantityPrice();
           });
         });
-        // FIN de la function de suprresion d'un produit
+        // FIN de la function de suppression d'un produit
       });
     };
   });
@@ -211,12 +211,13 @@ let regExps = {
 
 // Crée un objet à remplir à partir des données saisies et validées
 let contact = {
-  firstName: document.getElementById("firstName").value,
-  lastName: document.getElementById("lastName").value,
-  address: document.getElementById("address").value,
-  city: document.getElementById("city").value,
-  email: document.getElementById("email").value,
+  firstName: "",
+  lastName: "",
+  address: "",
+  city: "",
+  email: "",
 };
+
 
 // Vérification des champs prénom, nom, adresse, ville et email
 function checkInput(input, errorMsg, inputValue) {
@@ -225,6 +226,7 @@ function checkInput(input, errorMsg, inputValue) {
   let inputRegExp = regExps[input.id + "RegExp"];
   let inputTest = inputRegExp.test(input.value); // Teste da valeur du champ par rapport à la RegExp correspondante
   inputValue = input.id;
+
   if (inputTest) { // si le test renvoie vrai, envoie la valeur saisie dans le formulaire à {contact}
     contact[`${inputValue}`] = input.value;
     inputErrorMsgElt.textContent = "";
@@ -232,7 +234,8 @@ function checkInput(input, errorMsg, inputValue) {
     inputErrorMsgElt.textContent = errorMsgs[errorMsg];
     contact[`${inputValue}`] = "";
   }
-}
+};
+
 for (let input of form) { // Pour chaque input du formulaire,
   input.addEventListener("input", (e) => {
     e.preventDefault(); // Ajoute un ecouteur d'evenement au changement de la valeur 
