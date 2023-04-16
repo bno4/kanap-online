@@ -133,7 +133,7 @@ fetch('http://localhost:3000/api/products')
               if (productQuantity == 0 || productQuantity >= 100) {
                 console.error("La quantité doit être comprise entre 1 et 100")
                 alert("La quantité doit être comprise entre 1 et 100")
-                location.reload();
+                event.target.value = "1";
                 productQuantity = `${objectInLocalStorage[i].quantity}`;
               } else {
                 objectInLocalStorage.forEach((obj) => {
@@ -191,11 +191,11 @@ const buttonSubmit = document.getElementById('order');
 
 // Création de l'objet contenat les messages d'erreurs
 let errorMsgs = {
-  "firstName": "Merci de ne saisir que des lettres et au moins 2 caractères",
-  "lastName": "Merci de ne saisir que des lettres et au moins 1 caractère",
-  "address": "Merci de ne saisir que des caractères alphanumériques et au moins 2 caractères",
-  "city": "Merci de ne saisir que des lettres et au moins 2 caractères",
-  "email": "Merci de saisir une adresse e-mail valide",
+  firstName: "Merci de ne saisir que des lettres et au moins 2 caractères",
+  lastName: "Merci de ne saisir que des lettres et au moins 1 caractère",
+  address: "Merci de ne saisir que des caractères alphanumériques et au moins 2 caractères",
+  city: "Merci de ne saisir que des lettres et au moins 2 caractères",
+  email: "Merci de saisir une adresse e-mail valide",
 };
 
 // création des RegEx
@@ -219,8 +219,6 @@ let contact = {
 // Vérification des champs prénom, nom, adresse, ville et email
 function checkInput(input) {
   let inputErrorMsgElt = document.getElementById(input.id + "ErrorMsg");
-  // errorMsg = input.id + "ErrorMsg";
-
   let inputRegExp = regExps[input.id + "RegExp"];
   let inputTest = inputRegExp.test(input.value); // Teste da valeur du champ par rapport à la RegExp correspondante
   inputValue = input.id;
