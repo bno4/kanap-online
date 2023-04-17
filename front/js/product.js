@@ -1,6 +1,4 @@
-// const urlSearch = window.location.search;
-// console.log(urlSearch)
-
+// Recherche id du produit
 const searchParams = new URLSearchParams(window.location.search);
 console.log(searchParams);
 
@@ -102,7 +100,4 @@ addToCart.addEventListener("click", (event) => {
         alert("Votre article a bien été ajouté au panier")
     }
     console.log(addObject);
-
-
-
 });
