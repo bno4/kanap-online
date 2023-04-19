@@ -292,7 +292,7 @@ buttonSubmit.addEventListener("click", (event) => {
       .then(data => {
         document.location.href = 'confirmation.html?id=' + data.orderId;
       });
-    console.table(commandDetails);
     console.table(contact);
+    console.table(commandDetails);
   };
 });
