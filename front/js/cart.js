@@ -174,7 +174,7 @@ fetch('http://localhost:3000/api/products')
               };
             });
             localStorage.setItem("cartProduct", JSON.stringify(objectInLocalStorage));
-            quantityChange();
+            // quantityChange();
             TotalQuantityPrice();
           });
         });
