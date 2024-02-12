@@ -1,11 +1,11 @@
 const sectionProducts = document.querySelector("#items");
 console.log(sectionProducts);
 
-const URL = "https://kanap-online.onrender.com";
+const URL = "http://localhost:3000/api/products";
 
 //
 //
-// "http://localhost:3000/api/products";
+//
 
 //---- création de la fonction qui affiche les pièces depuis l'API
 
