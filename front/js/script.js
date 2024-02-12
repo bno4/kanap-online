@@ -3,7 +3,7 @@ console.log(sectionProducts)
 
 const URL = "http://localhost:3000/api/products"
 
-//---- création de la fonction qui affiche les pièces depuis l'API (source : https://developer.mozilla.org/en-US/docs/Web/API/Response/json) ----//
+//---- création de la fonction qui affiche les pièces depuis l'API
 
 function fetchData() {
     fetch(URL)
@@ -23,9 +23,6 @@ function fetchData() {
                 nameProduct.innerText = product.name;
                 const descriptionProduct = document.createElement("p");
                 descriptionProduct.innerText = product.description;
-                // const priceProduct = document.createElement("p");
-                // priceProduct.innerText = `${product.price} €`;
-                // architecture des éléments a > article > img > h3 > p
                 sectionProducts.appendChild(linkProduct);
                 linkProduct.appendChild(articleProduct);
                 articleProduct.appendChild(imageProduct);

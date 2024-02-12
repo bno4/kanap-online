@@ -1,12 +1,8 @@
+const searchParams = new URLSearchParams(window.location.search);
+const idProduct = searchParams.get("id")
 // récupération et affichage de l'id saisie dans confirmation.html
 const orderId = document.getElementById('orderId');
-orderId.innerText = localStorage.getItem('orderId');
+orderId.innerText = idProduct;
 
-// suppresiosn du localStorage de l'orderId
-localStorage.removeItem('orderId');
-
-
-// Ancienne méthode qui vidait TOUT le localstorage. Pas recommandée si travaille en équipe
-// localStorage.clear();
 
 
